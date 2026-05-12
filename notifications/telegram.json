@@ -1,0 +1,18 @@
+{
+  "base": {
+    "logo": "",
+    "project": "11.HW_JS_Playwright_API_Diplom",
+    "environment": "some env",
+    "comment": "some comment",
+    "reportLink": "",
+    "language": "ru",
+    "allureFolder": "allure-report",
+    "enableChart": true,
+    "enableSuitesPublishing": false,
+    "customData": {}
+  },
+  "telegram": {
+    "token": "8569207574:AAH5ggu3fAyHV1WAJqixi-eRuIk-MtZ11oo",
+    "chat": "-5142022788"
+  }
+}

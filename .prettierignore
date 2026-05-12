@@ -1,0 +1,13 @@
+node_modules/
+*.config.js 
+
+*.env
+*.env.*
+package-lock.json
+
+*.log
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.png
