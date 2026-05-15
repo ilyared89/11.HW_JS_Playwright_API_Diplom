@@ -1,15 +1,19 @@
-import { test, expect } from '@playwright/test';
-import { UserService } from '../../src/services/UserService.js';
-import { testData } from '../../src/utils/dataGenerator.js';
+// @ts-check
+import { allure } from 'allure-playwright';
+import { apiTest as test } from '../../src/helpers/fixtures/api.fixture.js';
+import { newUser } from '../../src/helpers/builders/user.builder.js';
 
-test('@POST Создание пользователя', async ({ request }) => {
-  const userService = new UserService(request);
-  const userData = testData.generateUser();
-  
-  const response = await userService.createUser(userData);
-  expect(response.status()).toBe(201);
-  
-  const body = await userService.assertUserCreated(response, userData);
-  expect(body.id).toBeDefined();
-  expect(body.createdAt).toBeDefined();
+test.describe('API · Users @API @USERS', () => {
+  test('Creates a new user @SMOKE @POST', async ({ userApi }) => {
+    await allure.epic('reqres.in');
+    await allure.feature('Users');
+    await allure.story('Create user');
+    await allure.severity('blocker');
+    await allure.owner('ilyared89');
+    await allure.tag('regression');
+
+    const user = newUser();
+    const res = await userApi.createUser(user);
+    await userApi.expectUserCreated(res, user);
+  });
 });

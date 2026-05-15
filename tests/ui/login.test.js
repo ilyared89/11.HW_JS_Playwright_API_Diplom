@@ -1,16 +1,30 @@
-import { test } from '@playwright/test';
-import { LoginPage } from '../../src/pages/LoginPage.js';
-import { testData } from '../../src/utils/dataGenerator.js';
-import { customAsserts } from '../../src/utils/assertions.js';
+// @ts-check
+import { allure } from 'allure-playwright';
+import { test } from '../../src/helpers/fixtures/ui.fixture.js';
 
-test('Успешный вход с валидными данными', async ({ page }) => {
-  const loginPage = new LoginPage(page);
-  await page.goto('https://bstackdemo.com/');
-  
-  const credentials = testData.generateUser(); // или фиксированные для demo
-  await loginPage.login('demouser', 'testingisfun99');
-  await loginPage.assertLoginSuccess();
-  
-  // Кастомный ассерт из utils
-  await customAsserts.assertUrlContains(page, '/index.html');
+test.describe('UI · Authentication @UI @AUTH', () => {
+  test('Successful login with valid credentials @SMOKE', async ({ loginPage }) => {
+    await allure.epic('bstackdemo');
+    await allure.feature('Authentication');
+    await allure.story('Login');
+    await allure.severity('blocker');
+    await allure.owner('ilyared89');
+    await allure.tag('regression');
+
+    await loginPage.open();
+    await loginPage.login('demouser', 'testingisfun99');
+    await loginPage.expectLoginSuccess();
+  });
+
+  test('Shows error for invalid credentials', async ({ loginPage }) => {
+    await allure.epic('bstackdemo');
+    await allure.feature('Authentication');
+    await allure.story('Login — negative');
+    await allure.severity('normal');
+    await allure.owner('ilyared89');
+
+    await loginPage.open();
+    await loginPage.login('wronguser', 'wrongpass');
+    await loginPage.expectLoginError('Invalid username or password');
+  });
 });
