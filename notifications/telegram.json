@@ -1,0 +1,16 @@
+{
+  "base": {
+    "project": "11.HW_JS_Playwright_API_Diplom",
+    "environment": "test",
+    "comment": "Diploma project — demowebshop + json-server",
+    "reportLink": "",
+    "language": "ru",
+    "allureFolder": "allure-report",
+    "enableChart": true,
+    "enableSuitesPublishing": false
+  },
+  "telegram": {
+    "token": "${405278922}",
+    "chat": "${-5142022788}"
+  }
+}

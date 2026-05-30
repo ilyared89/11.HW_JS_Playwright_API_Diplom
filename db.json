@@ -1,0 +1,15 @@
+{
+  "posts": [
+    { "id": 1, "title": "Hello World", "body": "This is my first post", "userId": 1 },
+    { "id": 2, "title": "Second Post", "body": "Another post content", "userId": 1 },
+    { "id": 3, "title": "Third Post", "body": "More content here", "userId": 2 }
+  ],
+  "comments": [
+    { "id": 1, "postId": 1, "name": "John Doe", "email": "john@example.com", "body": "Great post!" },
+    { "id": 2, "postId": 1, "name": "Jane Smith", "email": "jane@example.com", "body": "Thanks for sharing" },
+    { "id": 3, "postId": 2, "name": "Bob Wilson", "email": "bob@example.com", "body": "Interesting read" }
+  ],
+  "profile": {
+    "name": "ilyared89"
+  }
+}

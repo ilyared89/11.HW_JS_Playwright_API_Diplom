@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Product defects",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*Expected.*"
+  },
+  {
+    "name": "Test defects",
+    "matchedStatuses": ["broken"],
+    "messageRegex": ".*Error.*"
+  },
+  {
+    "name": "Infrastructure",
+    "matchedStatuses": ["broken", "failed"],
+    "messageRegex": ".*timeout.*|.*ERR_.*|.*net::.*"
+  }
+]

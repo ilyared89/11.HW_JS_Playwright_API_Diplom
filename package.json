@@ -1,0 +1,29 @@
+{
+  "name": "11.hw_js_playwright_api_diplom",
+  "version": "1.0.0",
+  "description": "Дипломный проект — UI (demowebshop) + API (json-server) автоматизация",
+  "type": "module",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test tests/ui",
+    "test:api": "npx playwright test tests/api",
+    "test:smoke": "npx playwright test --grep @SMOKE",
+    "test:headed": "npx playwright test --headed",
+    "test:debug": "npx playwright test --ui",
+    "allure:generate": "npx allure-commandline generate allure-results --clean -o allure-report",
+    "allure:open": "npx allure-commandline open allure-report",
+    "allure:serve": "npx allure-commandline serve allure-results",
+    "notify:telegram": "java \"-DconfigFile=notifications/telegram.json\" -jar notifications/allure-notifications-4.11.0.jar",
+    "test:notify": "npm run test && npm run allure:generate && npm run notify:telegram"
+  },
+  "keywords": ["playwright", "automation", "allure", "qa", "demowebshop", "json-server"],
+  "author": "ilyared89",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^9.7.0",
+    "@playwright/test": "^1.52.0",
+    "allure-commandline": "^2.33.0",
+    "allure-playwright": "^3.2.1",
+    "dotenv": "^16.5.0"
+  }
+}

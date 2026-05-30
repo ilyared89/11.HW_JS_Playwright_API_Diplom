@@ -1,0 +1,127 @@
+name: 🎓 Diploma Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: 'Test suite'
+        required: true
+        default: 'all'
+        type: choice
+        options: [all, ui, api]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Playwright (${{ inputs.suite || 'all' }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: 📦 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: ☕ Setup Java (for Allure)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: 📥 Install dependencies
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: 📜 Restore Allure history
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: 🧪 Run tests
+        env:
+          CI: true
+          BASE_URL: ${{ secrets.BASE_URL || 'https://demowebshop.tricentis.com' }}
+          API_BASE_URL: ${{ secrets.API_BASE_URL || 'https://my-json-server.typicode.com/ilyared89/demo' }}
+        run: |
+          case "${{ inputs.suite || 'all' }}" in
+            ui) npm run test:ui ;;
+            api) npm run test:api ;;
+            *) npm test ;;
+          esac
+
+      - name: 📊 Generate Allure Report
+        if: always()
+        run: |
+          npm install -g allure-commandline
+          allure generate allure-results --clean -o allure-report --history-path gh-pages/history
+
+      - name: 🚀 Deploy to GitHub Pages
+        if: always() && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          publish_branch: gh-pages
+          keep_files: false
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: '📊 Allure report: ${{ github.sha }}'
+
+      - name: 📤 Upload Allure results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 7
+
+      - name: 📤 Upload to Allure TestOps
+        if: always()
+        continue-on-error: true
+        env:
+          ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
+          ALLURE_PROJECT_ID: ${{ secrets.ALLURE_PROJECT_ID }}
+          ALLURE_ENDPOINT: ${{ secrets.ALLURE_ENDPOINT }}
+        run: |
+          curl -sSL https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64 -o /tmp/allurectl
+          chmod +x /tmp/allurectl
+          /tmp/allurectl upload             --endpoint "$ALLURE_ENDPOINT"             --token "$ALLURE_TOKEN"             --project-id "$ALLURE_PROJECT_ID"             --launch-name "Diploma · ${{ inputs.suite || 'all' }} · #${{ github.run_number }}"             --launch-tags "branch:${{ github.ref_name }},sha:${{ github.sha }}"             allure-results || echo "⚠️ TestOps upload skipped"
+
+      - name: 📢 Telegram notification
+        if: always()
+        uses: appleboy/telegram-action@master
+        continue-on-error: true
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          format: html
+          message: |
+            <b>🎓 Diploma Tests — ${{ job.status == 'success' && '✅ PASSED' || '❌ FAILED' }}</b>
+            Suite: <code>${{ inputs.suite || 'all' }}</code>
+            🌿 Branch: <code>${{ github.ref_name }}</code>
+            🔖 Commit: <code>${{ github.sha }}</code>
+            👤 Actor: ${{ github.actor }}
+
+            📊 <a href="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/">Allure Report</a>
+            🔧 <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">GitHub Actions</a>
