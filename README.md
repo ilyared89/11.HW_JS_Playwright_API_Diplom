@@ -47,13 +47,6 @@ npm ci
 npx playwright install chromium
 ```
 
-### Переменные окружения
-
-Скопируйте `.env.example` в `.env` и заполните:
-
-```bash
-cp .env.example .env
-```
 
 ### Запуск тестов
 
@@ -191,6 +184,9 @@ npm run allure:serve
 ## 📝 Allure TestOps
 
 - Результаты загружаются через `allurectl`
+- 🔧 Allure TestOps 
+[Ссыла на отчет] (https://allure.autotests.cloud/launch/53440)
+![Allure TestOps](image.png)
 - Интеграция с GitHub для отслеживания коммитов
 - Тест-кейсы синхронизируются автоматически
 

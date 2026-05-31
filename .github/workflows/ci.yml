@@ -84,15 +84,30 @@ jobs:
 
       - name: 🚀 Deploy to GitHub Pages
         if: always() && github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-report
-          publish_branch: gh-pages
-          keep_files: false
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          commit_message: '📊 Allure report: ${{ github.sha }}'
+        run: |
+          # Копируем кастомный index.html в корень отчёта
+          cp public/index.html allure-report/index.html
+          
+          # Копируем историю для графика стабильности
+          mkdir -p allure-report/history
+          if [ -d gh-pages/history ]; then
+            cp -r gh-pages/history/* allure-report/history/ 2>/dev/null || true
+          fi
+          
+          # Деплоим через peaceiris/actions-gh-pages
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # Создаём временный коммит в gh-pages
+          git checkout -B gh-pages-temp
+          cp -r allure-report/* .
+          git add .
+          git commit -m "📊 Allure report: ${{ github.sha }}" || echo "No changes to commit"
+          
+          # Пушим в ветку gh-pages
+          git push -f origin gh-pages-temp:gh-pages
+          git checkout main
+          
 
       - name: 📤 Upload Allure results
         uses: actions/upload-artifact@v4

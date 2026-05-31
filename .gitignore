@@ -66,6 +66,7 @@ coverage/
 allure-results/
 allure-report/
 allure
+categories.json
 
 #  Но можно закоммитить конфигурацию:
 !allure.config.js
@@ -76,3 +77,5 @@ notifications
 db.json
 *.token
 *.env
+.gitattributes
+Jenkinsfile
