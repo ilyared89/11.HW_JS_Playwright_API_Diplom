@@ -160,7 +160,14 @@ jobs:
             --launch-name "Diploma · ${{ inputs.suite || 'all' }} · #${{ github.run_number }}" \
             --launch-tags "branch:${{ github.ref_name }},sha:${{ github.sha }},ci:github" \
             allure-results || echo "⚠️ TestOps upload skipped"
-
+      - name: 🎨 Prepare landing page
+        if: always()
+        run: |
+          if [ -f public/index.html ]; then
+            # Копируем лендинг как ОТДЕЛЬНУЮ страницу, не перезаписывая отчёт
+            cp public/index.html allure-report/landing.html
+            echo "✅ Copied landing.html"
+          fi
       - name: 📢 Telegram notification
         if: always()
         uses: appleboy/telegram-action@master
