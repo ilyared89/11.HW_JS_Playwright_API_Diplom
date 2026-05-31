@@ -187,6 +187,8 @@ npm run allure:serve
 - 🔧 Allure TestOps 
 [Ссыла на отчет] (https://allure.autotests.cloud/launch/53440)
 ![Allure TestOps](image.png)
+📊 Allure Report
+![Отчет](image-1.png)
 - Интеграция с GitHub для отслеживания коммитов
 - Тест-кейсы синхронизируются автоматически
 
