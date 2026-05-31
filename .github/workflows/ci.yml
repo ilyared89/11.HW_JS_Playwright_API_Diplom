@@ -73,40 +73,24 @@ jobs:
       - name: 📊 Generate Allure Report
         if: always()
         run: |
-          npm install -g allure-commandline
-          # Копируем историю для графика стабильности
-          mkdir -p allure-results/history
-          if [ -d gh-pages/history ]; then
-            cp -r gh-pages/history/* allure-results/history/ 2>/dev/null || true
+          if [ -f public/index.html ]; then
+            cp public/index.html allure-report/index.html
+            echo "✅ Copied custom index.html"
+          else
+            echo "ℹ️ Using default Allure index.html"
           fi
-          allure generate allure-results --clean -o allure-report --history-path allure-results/history
-
 
       - name: 🚀 Deploy to GitHub Pages
         if: always() && github.ref == 'refs/heads/main'
-        run: |
-          # Копируем кастомный index.html в корень отчёта
-          cp public/index.html allure-report/index.html
-          
-          # Копируем историю для графика стабильности
-          mkdir -p allure-report/history
-          if [ -d gh-pages/history ]; then
-            cp -r gh-pages/history/* allure-report/history/ 2>/dev/null || true
-          fi
-          
-          # Деплоим через peaceiris/actions-gh-pages
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          
-          # Создаём временный коммит в gh-pages
-          git checkout -B gh-pages-temp
-          cp -r allure-report/* .
-          git add .
-          git commit -m "📊 Allure report: ${{ github.sha }}" || echo "No changes to commit"
-          
-          # Пушим в ветку gh-pages
-          git push -f origin gh-pages-temp:gh-pages
-          git checkout main
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          publish_branch: gh-pages
+          keep_files: false
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: '📊 Allure report: ${{ github.sha }}'
           
 
       - name: 📤 Upload Allure results
