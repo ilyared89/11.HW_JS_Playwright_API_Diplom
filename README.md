@@ -174,20 +174,15 @@ npm run allure:serve
 - Уведомления в Telegram со ссылками на отчёт и Actions
 - Загрузка результатов в Allure TestOps
 
-### Jenkins
-
-- Pipeline для `jenkins.autotests.cloud`
-- Allure Report публикуется как пост-билд шаг
-- Telegram уведомления
 
 ## 📝 Allure TestOps
 
 - Результаты загружаются через `allurectl`
 - 🔧 Allure TestOps
-- [Ссыла на отчет] (https://allure.autotests.cloud/launch/53440)
-- ![Allure TestOps](image.png)
+- [Ссыла на отчет](https://allure.autotests.cloud/launch/53440)
+![Allure TestOps](image.png)
 - 📊 Allure Report
-- ![Отчет](image-1.png)
+![Отчет](image-1.png)
 - Интеграция с GitHub для отслеживания коммитов
 - Тест-кейсы синхронизируются автоматически
 

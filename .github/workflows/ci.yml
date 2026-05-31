@@ -60,7 +60,7 @@ jobs:
         env:
           CI: true
           BASE_URL: ${{ secrets.BASE_URL || 'https://demowebshop.tricentis.com' }}
-          API_BASE_URL: ${{ secrets.API_BASE_URL || 'https://my-json-server.typicode.com/ilyared89/demo' }}
+          API_BASE_URL: ${{ secrets.API_BASE_URL || 'https://my-json-server.typicode.com/ilyared89/json-server-api' }}
         run: npx playwright test --reporter=list,allure-playwright
 
       # 6️⃣ 🔥 ГЕНЕРАЦИЯ ОТЧЁТА (создаёт allure-report/)
