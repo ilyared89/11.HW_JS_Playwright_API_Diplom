@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎓 Дипломный проект — Отчёты</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #333;
+      }
+      .card {
+        background: white;
+        border-radius: 16px;
+        padding: 32px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        margin-bottom: 24px;
+      }
+      h1 {
+        color: #667eea;
+        margin: 0 0 8px 0;
+      }
+      .subtitle {
+        color: #666;
+        margin: 0 0 24px 0;
+      }
+      .btn {
+        display: inline-block;
+        background: #667eea;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        margin: 8px 4px 8px 0;
+        transition: transform 0.2s;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        background: #5568d3;
+      }
+      .btn.secondary {
+        background: #6c757d;
+      }
+      .btn.secondary:hover {
+        background: #5a6268;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 16px;
+        margin: 24px 0;
+      }
+      .stat {
+        text-align: center;
+        padding: 16px;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+      .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #667eea;
+      }
+      .stat-label {
+        font-size: 12px;
+        color: #666;
+      }
+      .footer {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 32px;
+      }
+      .footer a {
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>🎓 Дипломный проект</h1>
+      <p class="subtitle">Автоматизация тестирования на Playwright</p>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value">16</div>
+          <div class="stat-label">Тестов</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">UI + API</div>
+          <div class="stat-label">Покрытие</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">✅</div>
+          <div class="stat-label">Статус</div>
+        </div>
+      </div>
+      <a href="./allure/" class="btn">📊 Allure Report</a>
+      <a
+        href="https://github.com/ilyared89/11.HW_JS_Playwright_API_Diplom"
+        class="btn secondary"
+        >🔗 GitHub</a
+      >
+      <a
+        href="https://allure.autotests.cloud/project/5227"
+        class="btn secondary"
+        >📈 TestOps</a
+      >
+    </div>
+    <div class="card">
+      <h2>🧰 Технологии</h2>
+      <ul>
+        <li>Playwright + JavaScript (ES Modules)</li>
+        <li>Page Object / Service Layer паттерны</li>
+        <li>Allure Report + Allure TestOps</li>
+        <li>GitHub Actions CI/CD</li>
+        <li>Telegram уведомления</li>
+      </ul>
+    </div>
+    <div class="footer">
+      <p>Автор: <strong>Илья Поединков</strong> | QA Automation</p>
+      <p>
+        <a href="https://github.com/ilyared89/11.HW_JS_Playwright_API_Diplom"
+          >Репозиторий</a
+        >
+      </p>
+    </div>
+  </body>
+</html>
