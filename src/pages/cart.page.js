@@ -1,3 +1,4 @@
+// src/pages/cart.page.js
 import { expect } from '@playwright/test';
 import { allure } from 'allure-playwright';
 import { BasePage } from './base.page.js';
@@ -6,51 +7,33 @@ export class CartPage extends BasePage {
   constructor(page) {
     super(page);
     this.cartItems = page.locator('.cart-item-row');
-    this.productNames = page.locator('.product-name');
-    this.removeCheckboxes = page.locator('input[name="removefromcart"]');
+    this.productNameInCart = page.locator('.product-name');
+    this.removeButton = page.locator('input[value="Remove"]');
     this.updateCartButton = page.locator('input[name="updatecart"]');
-    this.termsOfService = page.locator('#termsofservice');
+    this.emptyCartMessage = page.locator('.no-data');
     this.checkoutButton = page.locator('#checkout');
-    this.emptyCartMessage = page.locator('.order-summary-content');
-    this.cartQuantity = page.locator('.cart-qty');
+  }
+
+  async expectItemInCart(productName) {
+    await allure.step(`Expect item in cart: ${productName}`, async () => {
+      const item = this.productNameInCart.filter({ hasText: productName });
+      await expect(item.first()).toBeVisible({ timeout: 10000 });
+      await this.attachScreenshot(`Item ${productName} in cart`);
+    });
   }
 
   async removeFirstItem() {
-    await allure.step('Remove first item', async () => {
-      await this.removeCheckboxes.first().check();
-      await this.updateCartButton.click();
-    });
-  }
-
-  async agreeToTerms() {
-    await allure.step('Agree to terms', async () => {
-      await this.termsOfService.check();
-    });
-  }
-
-  async proceedToCheckout() {
-    await allure.step('Proceed to checkout', async () => {
-      await this.checkoutButton.click();
-    });
-  }
-
-  async expectCartHasItems(count) {
-    await allure.step(`Expect cart has ${count} item(s)`, async () => {
-      await expect(this.cartItems).toHaveCount(count);
-      await this.attachScreenshot('Cart items');
+    await allure.step('Remove first item from cart', async () => {
+      await this.removeButton.first().click({ force: true });
+      await this.updateCartButton.click({ force: true });
+      await this.page.waitForLoadState('networkidle');
     });
   }
 
   async expectCartEmpty() {
-    await allure.step('Expect cart empty', async () => {
-      await expect(this.emptyCartMessage).toContainText('Your Shopping Cart is empty');
-      await this.attachScreenshot('Empty cart');
-    });
-  }
-
-  async expectCartCounter(expected) {
-    await allure.step(`Expect cart counter: ${expected}`, async () => {
-      await expect(this.cartQuantity).toHaveText(expected);
+    await allure.step('Expect cart is empty', async () => {
+      await expect(this.emptyCartMessage).toBeVisible({ timeout: 10000 });
+      await this.attachScreenshot('Cart empty');
     });
   }
 }

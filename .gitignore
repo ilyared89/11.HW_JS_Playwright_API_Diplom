@@ -1,33 +1,3 @@
-# Dependencies
-node_modules/
-
-# Playwright
-playwright-report/
-test-results/
-blob-report/
-
-# Allure
-allure-results/
-allure-report/
-*.zip
-
-# Environment
-.env
-.env.local
-.env.*.local
-
-# OS / IDE
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
-*.code-workspace
-
-# Logs
-*.log
-npm-debug.log*
-
-
 # 📦 Зависимости
 node_modules/
 
@@ -54,6 +24,7 @@ tests/.auth/
 .env
 *.local.js
 *.env.local
+.env.*.local
 *.env.production
 auth-token.json
 
@@ -97,3 +68,6 @@ allure-report/
 
 #  Но можно закоммитить конфигурацию:
 !allure.config.js
+
+*.zip
+

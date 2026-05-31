@@ -9,10 +9,10 @@ export class HomePage extends BasePage {
     this.searchButton = page.locator('.search-box-button');
     this.productItems = page.locator('.product-item');
     this.productGrid = page.locator('.product-grid');
-    this.noResults = page.locator('.no-result');
+    this.noResults = page.getByText('No products were found');
     this.loginLink = page.locator('.ico-login');
     this.registerLink = page.locator('.ico-register');
-    this.cartLink = page.locator('.ico-cart');
+    this.cartLink = page.getByRole('link', { name: 'Shopping cart' }).first();
     this.newsletterEmail = page.locator('#newsletter-email');
     this.newsletterButton = page.locator('#newsletter-subscribe-button');
     this.newsletterResult = page.locator('#newsletter-result-block');
@@ -22,6 +22,13 @@ export class HomePage extends BasePage {
     await allure.step(`Search: ${query}`, async () => {
       await this.searchInput.fill(query);
       await this.searchButton.click();
+    });
+  }
+
+   async openCart() {
+    await allure.step('Open cart page', async () => {
+      await this.cartLink.click({ force: true });
+      await this.page.waitForLoadState('networkidle');
     });
   }
 
