@@ -10,7 +10,7 @@
     "enableSuitesPublishing": false
   },
   "telegram": {
-    "token": "${8569207574:AAH5ggu3fAyHV1WAJqixi-eRuIk-MtZ11oo}",
-    "chat": "${-5142022788}"
+    "token": "${TELEGRAM_BOT_TOKEN}",
+    "chat": "${TELEGRAM_CHAT_ID}"
   }
 }

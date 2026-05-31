@@ -17,6 +17,7 @@ check-list.js
 *.jpeg
 *.gif
 *.mp4
+debug-product-page.png
 
 # 🔐 Сессии и секреты (НИКОГДА не коммитить!)
 tests/.auth/

@@ -179,7 +179,7 @@ npm run allure:serve
 
 - Результаты загружаются через `allurectl`
 - 🔧 Allure TestOps
-- [Ссыла на отчет](https://allure.autotests.cloud/launch/53440)
+- [Ссыла на отчет](https://allure.autotests.cloud/project/5227/launches)
 ![Allure TestOps](image.png)
 - 📊 Allure Report
 ![Отчет](image-1.png)
