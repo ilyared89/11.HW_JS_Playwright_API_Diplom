@@ -65,9 +65,14 @@ coverage/
 # Allure результаты (не коммитим)
 allure-results/
 allure-report/
+allure
 
 #  Но можно закоммитить конфигурацию:
 !allure.config.js
 
 *.zip
-
+notifications
+.env.example
+db.json
+*.token
+*.env

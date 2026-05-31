@@ -62,7 +62,7 @@ jobs:
         env:
           CI: true
           BASE_URL: ${{ secrets.BASE_URL || 'https://demowebshop.tricentis.com' }}
-          API_BASE_URL: ${{ secrets.API_BASE_URL || 'https://my-json-server.typicode.com/ilyared89/demo' }}
+          API_BASE_URL: ${{ secrets.API_BASE_URL || 'https://my-json-server.typicode.com/ilyared89/json-server-api' }}
         run: |
           case "${{ inputs.suite || 'all' }}" in
             ui) npm run test:ui ;;
@@ -74,7 +74,13 @@ jobs:
         if: always()
         run: |
           npm install -g allure-commandline
-          allure generate allure-results --clean -o allure-report --history-path gh-pages/history
+          # Копируем историю для графика стабильности
+          mkdir -p allure-results/history
+          if [ -d gh-pages/history ]; then
+            cp -r gh-pages/history/* allure-results/history/ 2>/dev/null || true
+          fi
+          allure generate allure-results --clean -o allure-report --history-path allure-results/history
+
 
       - name: 🚀 Deploy to GitHub Pages
         if: always() && github.ref == 'refs/heads/main'
@@ -106,7 +112,13 @@ jobs:
         run: |
           curl -sSL https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64 -o /tmp/allurectl
           chmod +x /tmp/allurectl
-          /tmp/allurectl upload             --endpoint "$ALLURE_ENDPOINT"             --token "$ALLURE_TOKEN"             --project-id "$ALLURE_PROJECT_ID"             --launch-name "Diploma · ${{ inputs.suite || 'all' }} · #${{ github.run_number }}"             --launch-tags "branch:${{ github.ref_name }},sha:${{ github.sha }}"             allure-results || echo "⚠️ TestOps upload skipped"
+           /tmp/allurectl upload \
+            --endpoint "$ALLURE_ENDPOINT" \
+            --token "$ALLURE_TOKEN" \
+            --project-id "$ALLURE_PROJECT_ID" \
+            --launch-name "Diploma · ${{ inputs.suite || 'all' }} · #${{ github.run_number }}" \
+            --launch-tags "branch:${{ github.ref_name }},sha:${{ github.sha }},ci:github" \
+            allure-results || echo "⚠️ TestOps upload skipped"
 
       - name: 📢 Telegram notification
         if: always()
