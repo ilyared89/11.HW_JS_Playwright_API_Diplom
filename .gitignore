@@ -12,7 +12,6 @@ article-data.json
 check-list.js
 
 # 🖼️ Артефакты тестов (скриншоты, видео)
-*.png
 *.webm
 *.jpg
 *.jpeg
