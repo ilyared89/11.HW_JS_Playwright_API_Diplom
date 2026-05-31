@@ -174,17 +174,20 @@ npm run allure:serve
 - Уведомления в Telegram со ссылками на отчёт и Actions
 - Загрузка результатов в Allure TestOps
 
-
 ## 📝 Allure TestOps
 
 - Результаты загружаются через `allurectl`
 - 🔧 Allure TestOps
 - [Ссыла на отчет](https://allure.autotests.cloud/project/5227/launches)
-![Allure TestOps](image.png)
+  ![Allure TestOps](image.png)
 - 📊 Allure Report
-![Отчет](image-1.png)
+  ![Отчет](image-1.png)
 - Интеграция с GitHub для отслеживания коммитов
 - Тест-кейсы синхронизируются автоматически
+
+## 📝 Telegram notifications
+
+- ![telegram](image-2.png)
 
 ---
 
