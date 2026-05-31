@@ -1,0 +1,7 @@
+{
+  "user": "ilyared89",
+  "repo": "demo",
+  "url": "https://raw.githubusercontent.com/ilyared89/demo/main/db.json",
+  "status": 404,
+  "data": "404: Not Found"
+}
