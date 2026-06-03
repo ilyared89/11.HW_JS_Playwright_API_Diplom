@@ -1,13 +1,16 @@
-import { allure } from 'allure-playwright';
-import { apiTest as test, expect } from '../../src/helpers/fixtures/api.fixture.js';
-import { newPost } from '../../src/helpers/builders/index.js';
+import { allure } from "allure-playwright";
+import {
+  apiTest as test,
+  expect,
+} from "../../src/helpers/fixtures/api.fixture.js";
+import { newPost } from "../../src/helpers/builders/index.js";
 
-test.describe('API · Posts Update @API @POSTS', () => {
-  test('Updates post with PUT @SMOKE @PUT', async ({ postsApi }) => {
-    await allure.epic('json-server');
-    await allure.feature('Posts');
-    await allure.story('Update post');
-    await allure.severity('critical');
+test.describe("API · Posts Update @API @POSTS", () => {
+  test("Updates post with PUT @SMOKE @PUT", async ({ postsApi }) => {
+    await allure.epic("json-server");
+    await allure.feature("Posts");
+    await allure.story("Update post");
+    await allure.severity("critical");
 
     // 1. Создаём пост
     const post = newPost();
@@ -24,11 +27,11 @@ test.describe('API · Posts Update @API @POSTS', () => {
     expect(body.title).toBe(update.title);
   });
 
-  test('Partially updates post with PATCH @PATCH', async ({ postsApi }) => {
-    await allure.epic('json-server');
-    await allure.feature('Posts');
-    await allure.story('Partial update post');
-    await allure.severity('normal');
+  test("Partially updates post with PATCH @PATCH", async ({ postsApi }) => {
+    await allure.epic("json-server");
+    await allure.feature("Posts");
+    await allure.story("Partial update post");
+    await allure.severity("normal");
 
     // 1. Создаём пост
     const post = newPost();

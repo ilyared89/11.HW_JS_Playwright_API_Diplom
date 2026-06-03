@@ -1,14 +1,18 @@
-import { allure } from 'allure-playwright';
-import { apiTest as test, expect } from '../../src/helpers/fixtures/api.fixture.js';
-import { newPost } from '../../src/helpers/builders/index.js';
+import { allure } from "allure-playwright";
+import {
+  apiTest as test,
+  expect,
+} from "../../src/helpers/fixtures/api.fixture.js";
+import { newPost } from "../../src/helpers/builders/index.js";
 
-
-test.describe('API · Posts Delete @API @POSTS', () => {
-  test('Creates and deletes post successfully @SMOKE @DELETE', async ({ postsApi }) => {
-    await allure.epic('json-server');
-    await allure.feature('Posts');
-    await allure.story('Delete post');
-    await allure.severity('critical');
+test.describe("API · Posts Delete @API @POSTS", () => {
+  test("Creates and deletes post successfully @SMOKE @DELETE", async ({
+    postsApi,
+  }) => {
+    await allure.epic("json-server");
+    await allure.feature("Posts");
+    await allure.story("Delete post");
+    await allure.severity("critical");
 
     // 1. Создаём пост
     const post = newPost();

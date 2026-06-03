@@ -1,12 +1,12 @@
-import { expect } from '@playwright/test';
-import { allure } from 'allure-playwright';
+import { expect } from "@playwright/test";
+import { allure } from "allure-playwright";
 
 export class BasePage {
   constructor(page) {
     this.page = page;
   }
 
-  async open(path = '/') {
+  async open(path = "/") {
     await allure.step(`Open page ${path}`, async () => {
       await this.page.goto(path);
     });
@@ -14,6 +14,6 @@ export class BasePage {
 
   async attachScreenshot(name) {
     const png = await this.page.screenshot({ fullPage: false });
-    await allure.attachment(name, png, 'image/png');
+    await allure.attachment(name, png, "image/png");
   }
 }

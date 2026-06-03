@@ -1,12 +1,15 @@
-import { allure } from 'allure-playwright';
-import { apiTest as test, expect } from '../../src/helpers/fixtures/api.fixture.js';
+import { allure } from "allure-playwright";
+import {
+  apiTest as test,
+  expect,
+} from "../../src/helpers/fixtures/api.fixture.js";
 
-test.describe('API · Posts Get @API @POSTS', () => {
-  test('Gets all posts @SMOKE @GET', async ({ postsApi }) => {
-    await allure.epic('json-server');
-    await allure.feature('Posts');
-    await allure.story('Get all posts');
-    await allure.severity('critical');
+test.describe("API · Posts Get @API @POSTS", () => {
+  test("Gets all posts @SMOKE @GET", async ({ postsApi }) => {
+    await allure.epic("json-server");
+    await allure.feature("Posts");
+    await allure.story("Get all posts");
+    await allure.severity("critical");
 
     const res = await postsApi.getAll();
     expect(res.status()).toBe(200);
@@ -15,7 +18,7 @@ test.describe('API · Posts Get @API @POSTS', () => {
     expect(body.length).toBeGreaterThan(0);
   });
 
-  test('Gets a single post @GET', async ({ postsApi }) => {
+  test("Gets a single post @GET", async ({ postsApi }) => {
     const res = await postsApi.getById(1);
     expect(res.status()).toBe(200);
     const body = await res.json();
