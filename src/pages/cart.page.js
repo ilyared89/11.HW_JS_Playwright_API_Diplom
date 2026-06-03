@@ -6,15 +6,18 @@ export class CartPage extends BasePage {
     super(page);
     this.cartItems = page.locator('.cart-item-row');
     this.productNameInCart = page.locator('.product-name');
-    this.removeButton = page.getByRole('button', { name: 'Remove' });
-    this.updateCartButton = page.getByRole('button', { name: 'Update shopping cart' });
-    this.emptyCartMessage = page.getByText('Your Shopping Cart is empty!');
-    this.checkoutButton = page.getByRole('button', { name: 'Checkout' });
+    // ✅ nopCommerce: удаление через чекбокс + Update
+    this.removeCheckbox = page.locator('input[name="removefromcart"]');
+    this.updateCartButton = page.locator('input[name="updatecart"]');
+    this.emptyCartMessage = page.locator('.order-summary-content');
+    this.checkoutButton = page.locator('#checkout');
   }
 
   async removeFirstItem() {
     await allure.step('Remove first item from cart', async () => {
-      await this.removeButton.first().click();
+      // Отмечаем чекбокс удаления у первого товара
+      await this.removeCheckbox.first().check();
+      // Нажимаем Update shopping cart
       await this.updateCartButton.click();
       await this.page.waitForLoadState('networkidle');
     });

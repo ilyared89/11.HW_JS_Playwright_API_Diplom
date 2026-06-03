@@ -37,7 +37,7 @@ export class ProductPage extends BasePage {
         await this.quantityInput.fill(String(quantity));
       }
       await this.addToCartButton.click();
-      await this.closeNotification.click({ force: true });
+      //await this.closeNotification.click({ force: true });//
       await this.attachScreenshot('Added to cart');
     });
   }

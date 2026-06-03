@@ -1,6 +1,8 @@
 import { allure } from 'allure-playwright';
 import { test } from '../../src/helpers/fixtures/ui.fixture.js';
-import { newUser } from '../../src/helpers/builders/user.builder.js';
+import { RegisterPage } from '../../src/pages/index.js';
+import { newUser } from '../../src/helpers/builders/index.js';;
+import { HomePage, ProductPage, CartPage } from '../../src/pages/index.js';
 
 test.describe('UI · Registration @UI @AUTH', () => {
   test('Successful registration with random data @SMOKE', async ({ registerPage }) => {

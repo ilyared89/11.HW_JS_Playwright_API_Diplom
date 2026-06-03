@@ -1,6 +1,7 @@
 import { allure } from 'allure-playwright';
 import { test, expect } from '../../src/helpers/fixtures/ui.fixture.js';
-import { UserBuilder } from '../../src/helpers/builders/user.builder.js';
+import { UserBuilder } from '../../src/helpers/builders/index.js';
+import { HomePage, ProductPage, CartPage } from '../../src/pages/index.js';
 
 test.describe('UI · Newsletter @UI @NEWSLETTER', () => {
   test('Subscribe to newsletter with valid email @SMOKE', async ({ homePage }) => {

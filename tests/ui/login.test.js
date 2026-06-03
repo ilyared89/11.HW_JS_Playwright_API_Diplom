@@ -1,5 +1,6 @@
 import { allure } from 'allure-playwright';
 import { test } from '../../src/helpers/fixtures/ui.fixture.js';
+import { HomePage, ProductPage, CartPage } from '../../src/pages/index.js';
 
 test.describe('UI · Authentication @UI @AUTH', () => {
   test('Successful login with valid credentials @SMOKE', async ({ loginPage }) => {

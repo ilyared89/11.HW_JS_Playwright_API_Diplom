@@ -47,6 +47,11 @@ npm ci
 npx playwright install chromium
 ```
 
+### Убить все node процессы (powerShell с правами Admin)
+
+taskkill /F /IM node.exe
+
+
 ### Запуск тестов
 
 ```bash

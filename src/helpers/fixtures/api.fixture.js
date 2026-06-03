@@ -1,7 +1,5 @@
 import { test as base, expect } from "@playwright/test";
-import { ApiService } from "../../services/api.service.js";
-import { PostsService } from "../../services/posts.service.js";
-import { CommentsService } from "../../services/comments.service.js";
+import { ApiService, PostsService, CommentsService } from "../../services/index.js";
 
 export const apiTest = base.extend({
   api: async ({ playwright }, use) => {

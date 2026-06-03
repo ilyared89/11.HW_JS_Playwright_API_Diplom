@@ -1,6 +1,7 @@
 import { allure } from 'allure-playwright';
 import { apiTest as test, expect } from '../../src/helpers/fixtures/api.fixture.js';
-import { newPost } from '../../src/helpers/builders/post.builder.js';
+import { newPost } from '../../src/helpers/builders/index.js';;
+
 
 test.describe('API · Posts Delete @API @POSTS', () => {
   test('Creates and deletes post successfully @SMOKE @DELETE', async ({ postsApi }) => {

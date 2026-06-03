@@ -22,7 +22,7 @@ test.describe('UI · Cart @UI @CART', () => {
     // 4. Переходим в корзину
     await homePage.openCart();
 
-    // 5. ✅ Явная проверка: товар в корзине
+    // 5. ✅ Проверка: товар в корзине
     await expect(cartPage.cartItemsLocator).toHaveCount(1);
     await expect(cartPage.productNameLocator.first()).toBeVisible();
     await cartPage.attachScreenshot('Cart with item');
@@ -30,8 +30,8 @@ test.describe('UI · Cart @UI @CART', () => {
     // 6. Удаляем товар
     await cartPage.removeFirstItem();
 
-    // 7. ✅ Явная проверка: корзина пуста
-    await expect(cartPage.emptyCartMessageLocator).toBeVisible({ timeout: 10000 });
+    // 7. ✅ Проверка: корзина пуста
+    await expect(cartPage.emptyCartMessageLocator).toContainText('Your Shopping Cart is empty!', { timeout: 10000 });
     await cartPage.attachScreenshot('Cart empty');
   });
 });

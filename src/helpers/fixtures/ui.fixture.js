@@ -1,9 +1,5 @@
 import { test as base } from '@playwright/test';
-import { LoginPage } from '../../pages/login.page.js';
-import { RegisterPage } from '../../pages/register.page.js';
-import { HomePage } from '../../pages/home.page.js';
-import { ProductPage } from '../../pages/product.page.js';
-import { CartPage } from '../../pages/cart.page.js';
+import { LoginPage, RegisterPage, HomePage, ProductPage, CartPage } from '../../pages/index.js';
 
 export const test = base.extend({
   loginPage: async ({ page }, use) => { await use(new LoginPage(page)); },

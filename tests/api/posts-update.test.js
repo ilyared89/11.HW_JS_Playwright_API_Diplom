@@ -1,6 +1,6 @@
 import { allure } from 'allure-playwright';
 import { apiTest as test, expect } from '../../src/helpers/fixtures/api.fixture.js';
-import { newPost } from '../../src/helpers/builders/post.builder.js';
+import { newPost } from '../../src/helpers/builders/index.js';
 
 test.describe('API · Posts Update @API @POSTS', () => {
   test('Updates post with PUT @SMOKE @PUT', async ({ postsApi }) => {
@@ -12,7 +12,7 @@ test.describe('API · Posts Update @API @POSTS', () => {
   });
 
   test('Partially updates post with PATCH @PATCH', async ({ postsApi }) => {
-    const post = newPost(); // используем Builder
+    const post = newPost();
     const res = await postsApi.patch(1, { title: post.title });
     expect(res.status()).toBe(200);
     const body = await res.json();

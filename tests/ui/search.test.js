@@ -1,5 +1,6 @@
 import { allure } from 'allure-playwright';
 import { test, expect } from '../../src/helpers/fixtures/ui.fixture.js';
+import { HomePage, ProductPage, CartPage } from '../../src/pages/index.js';
 
 test.describe('UI · Search @UI @SEARCH', () => {
   test('Search for existing product returns results @SMOKE', async ({ homePage }) => {
