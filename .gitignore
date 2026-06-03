@@ -78,9 +78,9 @@ db.json
 *.token
 *.env
 .gitattributes
-Jenkinsfile".env.example" 
-"db.json" 
-"Jenkinsfile" 
-"notifications/telegram.json" 
-"*.png" 
-"debug-*.png" 
+Jenkinsfile
+.env.example
+db.json
+Jenkinsfile
+notifications/telegram.json
+debug-*.png

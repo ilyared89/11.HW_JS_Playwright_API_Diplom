@@ -1,16 +1,15 @@
-import { expect } from '@playwright/test';
 import { allure } from 'allure-playwright';
 import { BasePage } from './base.page.js';
 
 export class LoginPage extends BasePage {
   constructor(page) {
     super(page);
-    this.emailInput = page.locator('#Email');
-    this.passwordInput = page.locator('#Password');
-    this.loginButton = page.locator('input[value="Log in"]');
+    this.emailInput = page.getByLabel('Email:');
+    this.passwordInput = page.getByLabel('Password:');
+    this.loginButton = page.getByRole('button', { name: 'Log in' });
     this.errorMessage = page.locator('.validation-summary-errors');
     this.accountHeader = page.locator('.account');
-    this.registerLink = page.locator('a[href="/register"]');
+    this.registerLink = page.getByRole('link', { name: 'Register' });
   }
 
   async login(email, password) {
@@ -27,17 +26,6 @@ export class LoginPage extends BasePage {
     });
   }
 
-  async expectLoginSuccess() {
-    await allure.step('Expect login success', async () => {
-      await expect(this.accountHeader).toBeVisible();
-      await this.attachScreenshot('Login success');
-    });
-  }
-
-  async expectLoginError(expectedMessage) {
-    await allure.step('Expect login error', async () => {
-      await expect(this.errorMessage).toContainText(expectedMessage);
-      await this.attachScreenshot('Login error');
-    });
-  }
+  get accountHeaderLocator() { return this.accountHeader; }
+  get errorMessageLocator() { return this.errorMessage; }
 }

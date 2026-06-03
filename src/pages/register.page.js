@@ -1,18 +1,17 @@
-import { expect } from '@playwright/test';
 import { allure } from 'allure-playwright';
 import { BasePage } from './base.page.js';
 
 export class RegisterPage extends BasePage {
   constructor(page) {
     super(page);
-    this.genderMale = page.locator('#gender-male');
-    this.genderFemale = page.locator('#gender-female');
-    this.firstNameInput = page.locator('#FirstName');
-    this.lastNameInput = page.locator('#LastName');
-    this.emailInput = page.locator('#Email');
-    this.passwordInput = page.locator('#Password');
-    this.confirmPasswordInput = page.locator('#ConfirmPassword');
-    this.registerButton = page.locator('#register-button');
+    this.genderMale = page.getByLabel('Male');
+    this.genderFemale = page.getByLabel('Female');
+    this.firstNameInput = page.getByLabel('First name:');
+    this.lastNameInput = page.getByLabel('Last name:');
+    this.emailInput = page.getByLabel('Email:');
+    this.passwordInput = page.getByLabel('Password:');
+    this.confirmPasswordInput = page.getByLabel('Confirm password:');
+    this.registerButton = page.getByRole('button', { name: 'Register' });
     this.resultMessage = page.locator('.result');
     this.validationErrors = page.locator('.field-validation-error');
   }
@@ -35,17 +34,6 @@ export class RegisterPage extends BasePage {
     });
   }
 
-  async expectRegistrationSuccess() {
-    await allure.step('Expect registration success', async () => {
-      await expect(this.resultMessage).toContainText('Your registration completed');
-      await this.attachScreenshot('Registration success');
-    });
-  }
-
-  async expectValidationError(expectedMessage) {
-    await allure.step('Expect validation error', async () => {
-      await expect(this.validationErrors.first()).toContainText(expectedMessage);
-      await this.attachScreenshot('Validation error');
-    });
-  }
+  get resultMessageLocator() { return this.resultMessage; }
+  get validationErrorsLocator() { return this.validationErrors; }
 }

@@ -16,8 +16,4 @@ export class BasePage {
     const png = await this.page.screenshot({ fullPage: false });
     await allure.attachment(name, png, 'image/png');
   }
-
-  async expectUrlContains(substring) {
-    await expect(this.page).toHaveURL(new RegExp(substring));
-  }
 }
