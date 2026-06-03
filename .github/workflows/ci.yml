@@ -176,11 +176,19 @@ jobs:
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           format: html
           message: |
-            <b>🎓 Diploma in Test Automation — ${{ job.status == 'success' && '✅ PASSED' || '❌ FAILED' }}</b>
+            <b>🎓 Diploma in Test Automation — ${{ job.status == 'success' && '✅ Успех' || '❌ Провал' }}</b>
+
+            📊 <b>Статистика тестов:</b>
+            ▫️ Всего пройдено: <b>${{ steps.stats.outputs.total }}</b>
+            ✅ Успешные: <b>${{ steps.stats.outputs.passed }}</b>
+            ❌ Провалено: <b>${{ steps.stats.outputs.failed }}</b>
+            ⏭️ Пропущено: <b>${{ steps.stats.outputs.skipped }}</b>
+            ⚠️ Сломано: <b>${{ steps.stats.outputs.broken }}</b>
+
             Suite: <code>${{ inputs.suite || 'all' }}</code>
             🌿 Branch: <code>${{ github.ref_name }}</code>
             🔖 Commit: <code>${{ github.sha }}</code>
-            👤 Actor: ${{ github.actor }}
+            👤 Author: ${{ github.actor }}
 
             📊 <a href="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/">Allure Report</a>
             🔧 <a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">GitHub Actions</a>
