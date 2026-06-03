@@ -167,6 +167,7 @@ jobs:
             cp public/index.html allure-report/landing.html
             echo "✅ Copied landing.html"
           fi
+            # 1️⃣1️⃣ 📢 Telegram notification
       - name: 📢 Telegram notification
         if: always()
         uses: appleboy/telegram-action@master
@@ -179,11 +180,11 @@ jobs:
             <b>🎓 Diploma in Test Automation — ${{ job.status == 'success' && '✅ Успех' || '❌ Провал' }}</b>
 
             📊 <b>Статистика тестов:</b>
-            ▫️ Всего пройдено: <b>${{ steps.stats.outputs.total }}</b>
-            ✅ Успешные: <b>${{ steps.stats.outputs.passed }}</b>
-            ❌ Провалено: <b>${{ steps.stats.outputs.failed }}</b>
-            ⏭️ Пропущено: <b>${{ steps.stats.outputs.skipped }}</b>
-            ⚠️ Сломано: <b>${{ steps.stats.outputs.broken }}</b>
+            ▫️ Всего пройдено: <b>${{ steps.stats.outputs.total != '' && steps.stats.outputs.total || '0' }}</b>
+            ✅ Успешные: <b>${{ steps.stats.outputs.passed != '' && steps.stats.outputs.passed || '0' }}</b>
+            ❌ Провалено: <b>${{ steps.stats.outputs.failed != '' && steps.stats.outputs.failed || '0' }}</b>
+            ⏭️ Пропущено: <b>${{ steps.stats.outputs.skipped != '' && steps.stats.outputs.skipped || '0' }}</b>
+            ⚠️ Сломано: <b>${{ steps.stats.outputs.broken != '' && steps.stats.outputs.broken || '0' }}</b>
 
             Suite: <code>${{ inputs.suite || 'all' }}</code>
             🌿 Branch: <code>${{ github.ref_name }}</code>
