@@ -60,7 +60,16 @@ jobs:
         env:
           CI: true
           BASE_URL: ${{ secrets.BASE_URL || 'https://demowebshop.tricentis.com' }}
-        run: npx playwright test --reporter=list,allure-playwright
+        run: npx playwright test
+
+      # 5️⃣.5️⃣ 🔍 Отладка allure-results
+      - name: 🔍 Debug allure-results
+        if: always()
+        run: |
+          echo "📁 Contents of allure-results:"
+          ls -la allure-results/ 2>/dev/null || echo "⚠️ allure-results not found"
+          echo "📄 Count of result files:"
+          ls allure-results/*-result.json 2>/dev/null | wc -l || echo "0"
 
       # 6️⃣ 🔥 ГЕНЕРАЦИЯ ОТЧЁТА (создаёт allure-report/)
       - name: 📊 Generate Allure Report
@@ -131,6 +140,36 @@ jobs:
           name: allure-results
           path: allure-results/
           retention-days: 7
+
+      # 🔟 📊 ПАРСИНГ СТАТИСТИКИ ТЕСТОВ
+      - name: 📊 Parse test statistics
+        if: always()
+        id: stats
+        run: |
+          PASSED=0; FAILED=0; SKIPPED=0; BROKEN=0
+          
+          if [ -d "allure-results" ]; then
+            for file in allure-results/*-result.json; do
+              [ -f "$file" ] || continue
+              STATUS=$(cat "$file" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+              case "$STATUS" in
+                "passed") ((PASSED++)) ;;
+                "failed") ((FAILED++)) ;;
+                "skipped") ((SKIPPED++)) ;;
+                "broken") ((BROKEN++)) ;;
+              esac
+            done
+          fi
+          
+          TOTAL=$((PASSED + FAILED + SKIPPED + BROKEN))
+          
+          echo "passed=${PASSED:-0}" >> $GITHUB_OUTPUT
+          echo "failed=${FAILED:-0}" >> $GITHUB_OUTPUT
+          echo "skipped=${SKIPPED:-0}" >> $GITHUB_OUTPUT
+          echo "broken=${BROKEN:-0}" >> $GITHUB_OUTPUT
+          echo "total=${TOTAL:-0}" >> $GITHUB_OUTPUT
+          
+          echo "📊 Statistics: Total=$TOTAL, Passed=$PASSED, Failed=$FAILED, Skipped=$SKIPPED, Broken=$BROKEN"
 
       - name: 🔍 Debug - Check allure-report
         if: always()
