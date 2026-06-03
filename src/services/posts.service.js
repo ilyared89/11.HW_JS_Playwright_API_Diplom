@@ -1,4 +1,3 @@
-import { expect } from '@playwright/test';
 import { allure } from 'allure-playwright';
 
 export class PostsService {
@@ -28,33 +27,5 @@ export class PostsService {
 
   async delete(id) {
     return await this.api.delete(`/posts/${id}`);
-  }
-
-  async expectStatus(res, expected) {
-    await allure.step(`Expect status ${expected}`, async () => {
-      expect(res.status()).toBe(expected);
-    });
-  }
-
-  async expectJsonArray(res) {
-    await allure.step('Expect JSON array', async () => {
-      const body = await res.json();
-      expect(Array.isArray(body)).toBe(true);
-    });
-  }
-
-  async expectPostCreated(res, expectedTitle) {
-    await allure.step('Expect post created', async () => {
-      const body = await res.json();
-      expect(body).toHaveProperty('title', expectedTitle);
-      expect(body).toHaveProperty('id');
-    });
-  }
-
-  async expectPostUpdated(res, expectedTitle) {
-    await allure.step('Expect post updated', async () => {
-      const body = await res.json();
-      expect(body.title).toBe(expectedTitle);
-    });
   }
 }

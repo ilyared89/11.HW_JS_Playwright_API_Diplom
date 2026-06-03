@@ -12,6 +12,7 @@ export default defineConfig({
   timeout: 90_000,
   expect: { timeout: 10_000 },
   globalSetup: './tests/setup/global.setup.js',
+  globalTeardown: './tests/setup/global.setup.js',
 
   reporter: [
     ['list'],

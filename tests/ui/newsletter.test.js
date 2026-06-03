@@ -1,6 +1,6 @@
 import { allure } from 'allure-playwright';
-import { test } from '../../src/helpers/fixtures/ui.fixture.js';
-import { faker } from '@faker-js/faker';
+import { test, expect } from '../../src/helpers/fixtures/ui.fixture.js';
+import { UserBuilder } from '../../src/helpers/builders/user.builder.js';
 
 test.describe('UI · Newsletter @UI @NEWSLETTER', () => {
   test('Subscribe to newsletter with valid email @SMOKE', async ({ homePage }) => {
@@ -8,13 +8,12 @@ test.describe('UI · Newsletter @UI @NEWSLETTER', () => {
     await allure.feature('Newsletter');
     await allure.story('Subscribe');
     await allure.severity('normal');
-    await allure.owner('ilyared89');
-    await allure.tag('regression');
 
-    const email = faker.internet.email();
+    const email = new UserBuilder().addEmail().build().email;
 
     await homePage.open('/');
     await homePage.subscribeToNewsletter(email);
-    await homePage.expectNewsletterSuccess();
+    await expect(homePage.newsletterResultLocator).toContainText('Thank you');
+    await homePage.attachScreenshot('Newsletter success');
   });
 });

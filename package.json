@@ -16,7 +16,14 @@
     "notify:telegram": "java \"-DconfigFile=notifications/telegram.json\" -jar notifications/allure-notifications-4.11.0.jar",
     "test:notify": "npm run test && npm run allure:generate && npm run notify:telegram"
   },
-  "keywords": ["playwright", "automation", "allure", "qa", "demowebshop", "json-server"],
+  "keywords": [
+    "playwright",
+    "automation",
+    "allure",
+    "qa",
+    "demowebshop",
+    "json-server"
+  ],
   "author": "ilyared89",
   "license": "ISC",
   "devDependencies": {
@@ -24,6 +31,7 @@
     "@playwright/test": "^1.52.0",
     "allure-commandline": "^2.33.0",
     "allure-playwright": "^3.2.1",
-    "dotenv": "^16.5.0"
+    "dotenv": "^16.5.0",
+    "json-server": "^0.17.4"
   }
 }

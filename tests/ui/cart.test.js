@@ -1,55 +1,37 @@
-// tests/ui/cart.test.js
-import { test, expect } from '@playwright/test';
 import { allure } from 'allure-playwright';
-import { HomePage } from '../../src/pages/home.page.js';
-import { ProductPage } from '../../src/pages/product.page.js';
-import { CartPage } from '../../src/pages/cart.page.js';
+import { test, expect } from '../../src/helpers/fixtures/ui.fixture.js';
 
 test.describe('UI · Cart @UI @CART', () => {
-  test('Add product to cart and remove it @SMOKE', async ({ page }) => {
-    const home = new HomePage(page);
-    const product = new ProductPage(page);
-    const cart = new CartPage(page);
-    
-    await allure.epic('🛒 Demo Web Shop');
-    await allure.feature('🛒 Cart');
+  test('Add product to cart and remove it @SMOKE', async ({ homePage, productPage, cartPage }) => {
+    await allure.epic('Demo Web Shop');
+    await allure.feature('Cart');
     await allure.severity('critical');
-    
-    // 1. Переход на главную + поиск
-    await home.open('/');
-    await home.search('book');
-    await home.expectSearchResultsVisible();
-    
-    // 2. Открытие первого товара (без строгой проверки имени)
-    await home.openProduct(0);
-    // ⚠️ Пропускаем expectProductLoaded — может быть нестабильно
-    // await product.expectProductLoaded('Health Book');
-    
-    // 3. Добавление в корзину
-    await product.addToCart(1);
-    // ⚠️ Проверяем уведомление, но не падаем на ошибке
-    try {
-      await product.expectAddToCartSuccess();
-    } catch (e) {
-      console.log('⚠️ Add to cart notification check skipped');
-      await page.screenshot({ path: 'debug-add-to-cart.png', fullPage: true });
-    }
-    
-    // 4. Переход в корзину
-    await home.openCart();
-    
-    // 5. Проверка, что корзина не пустая (базовая проверка)
-    await expect(page.locator('.cart')).toBeVisible({ timeout: 10000 });
-    await cart.attachScreenshot('Cart page opened');
-    
-    // 6. Удаление товара (если кнопка есть)
-    const removeBtn = page.locator('input[value="Remove"]').first();
-    if (await removeBtn.isVisible().catch(() => false)) {
-      await removeBtn.click({ force: true });
-      await page.locator('input[name="updatecart"]').click({ force: true });
-      await page.waitForLoadState('networkidle');
-    }
-    
-    await allure.step('Cart test completed', () => {});
+
+    // 1. Открываем главную и ищем товар
+    await homePage.open('/');
+    await homePage.search('book');
+    await expect(homePage.productGridLocator).toBeVisible();
+
+    // 2. Открываем первый товар
+    await homePage.openProduct(0);
+
+    // 3. Добавляем в корзину
+    await productPage.addToCart(1);
+    await expect(productPage.notificationLocator).toContainText('The product has been added');
+
+    // 4. Переходим в корзину
+    await homePage.openCart();
+
+    // 5. ✅ Явная проверка: товар в корзине
+    await expect(cartPage.cartItemsLocator).toHaveCount(1);
+    await expect(cartPage.productNameLocator.first()).toBeVisible();
+    await cartPage.attachScreenshot('Cart with item');
+
+    // 6. Удаляем товар
+    await cartPage.removeFirstItem();
+
+    // 7. ✅ Явная проверка: корзина пуста
+    await expect(cartPage.emptyCartMessageLocator).toBeVisible({ timeout: 10000 });
+    await cartPage.attachScreenshot('Cart empty');
   });
 });

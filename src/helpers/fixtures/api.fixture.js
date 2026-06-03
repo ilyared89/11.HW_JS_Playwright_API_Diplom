@@ -5,9 +5,7 @@ import { CommentsService } from "../../services/comments.service.js";
 
 export const apiTest = base.extend({
   api: async ({ playwright }, use) => {
-    const baseURL =
-      process.env.API_BASE_URL ||
-      "https://my-json-server.typicode.com/ilyared89/json-server-api";
+    const baseURL = process.env.API_BASE_URL || "http://localhost:3000";
     const ctx = await playwright.request.newContext({ baseURL });
     await use(new ApiService(ctx, baseURL));
     await ctx.dispose();

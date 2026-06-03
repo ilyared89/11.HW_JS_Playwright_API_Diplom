@@ -2,23 +2,64 @@ import { faker } from '@faker-js/faker';
 
 export class UserBuilder {
   constructor() {
-    const firstName = faker.person.firstName();
-    const lastName = faker.person.lastName();
-    this.user = {
-      gender: faker.helpers.arrayElement(['male', 'female']),
-      firstName,
-      lastName,
-      email: faker.internet.email({ firstName, lastName, provider: 'test.com' }).toLowerCase(),
-      password: `Test1!${faker.internet.password({ length: 8 })}`,
-      confirmPassword: `Test1!${faker.internet.password({ length: 8 })}`,
-      country: 'United States',
-      city: faker.location.city(),
-      address: faker.location.streetAddress(),
-      zipCode: faker.location.zipCode(),
-      phone: faker.string.numeric(10),
-    };
+    this.user = {};
   }
 
+  addGender() {
+    this.user.gender = faker.helpers.arrayElement(['male', 'female']);
+    return this;
+  }
+
+  addFirstName() {
+    this.user.firstName = faker.person.firstName();
+    return this;
+  }
+
+  addLastName() {
+    this.user.lastName = faker.person.lastName();
+    return this;
+  }
+
+  addEmail() {
+    const first = this.user.firstName || faker.person.firstName();
+    const last = this.user.lastName || faker.person.lastName();
+    this.user.email = faker.internet.email({ firstName: first, lastName: last, provider: 'test.com' }).toLowerCase();
+    return this;
+  }
+
+  addPassword() {
+    const pwd = `Test1!${faker.internet.password({ length: 8 })}`;
+    this.user.password = pwd;
+    this.user.confirmPassword = pwd; // ✅ Исправление бага #8
+    return this;
+  }
+
+  addCountry() {
+    this.user.country = 'United States';
+    return this;
+  }
+
+  addCity() {
+    this.user.city = faker.location.city();
+    return this;
+  }
+
+  addAddress() {
+    this.user.address = faker.location.streetAddress();
+    return this;
+  }
+
+  addZipCode() {
+    this.user.zipCode = faker.location.zipCode();
+    return this;
+  }
+
+  addPhone() {
+    this.user.phone = faker.string.numeric(10);
+    return this;
+  }
+
+  // Методы для явного переопределения
   withGender(value) { this.user.gender = value; return this; }
   withFirstName(value) { this.user.firstName = value; return this; }
   withLastName(value) { this.user.lastName = value; return this; }
@@ -31,6 +72,17 @@ export class UserBuilder {
   withPhone(value) { this.user.phone = value; return this; }
 
   build() {
+    // Автоматически заполняем все поля, если не были вызваны явно
+    if (!this.user.gender) this.addGender();
+    if (!this.user.firstName) this.addFirstName();
+    if (!this.user.lastName) this.addLastName();
+    if (!this.user.email) this.addEmail();
+    if (!this.user.password) this.addPassword();
+    if (!this.user.country) this.addCountry();
+    if (!this.user.city) this.addCity();
+    if (!this.user.address) this.addAddress();
+    if (!this.user.zipCode) this.addZipCode();
+    if (!this.user.phone) this.addPhone();
     return { ...this.user };
   }
 }

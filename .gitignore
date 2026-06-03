@@ -78,4 +78,9 @@ db.json
 *.token
 *.env
 .gitattributes
-Jenkinsfile
+Jenkinsfile".env.example" 
+"db.json" 
+"Jenkinsfile" 
+"notifications/telegram.json" 
+"*.png" 
+"debug-*.png" 
