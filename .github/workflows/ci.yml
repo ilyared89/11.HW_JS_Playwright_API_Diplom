@@ -22,7 +22,6 @@ permissions:
 concurrency:
   group: "pages"
   cancel-in-progress: false
-# ... (начало файла: name, on, permissions, jobs) ...
 
 jobs:
   test:
@@ -31,108 +30,61 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      # 1️⃣ Checkout кода
       - name: 📦 Checkout
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Node.js
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
 
-      # 3️⃣ Setup Java (для allure-commandline)
       - name: ☕ Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
           java-version: "17"
 
-      # 4️⃣ Install dependencies
       - name: 📥 Install dependencies
         run: |
           npm ci
           npx playwright install --with-deps chromium
 
-      # 5️⃣ 🔥 ЗАПУСК ТЕСТОВ (генерирует allure-results/)
+      # 5️⃣ ЗАПУСК ТЕСТОВ (без переопределения репортеров!)
       - name: 🧪 Run tests
         env:
           CI: true
           BASE_URL: ${{ secrets.BASE_URL || 'https://demowebshop.tricentis.com' }}
         run: npx playwright test
 
-      # 5️⃣.5️⃣ 🔍 Отладка allure-results
+      # 5️⃣.5️⃣ ОТЛАДКА allure-results
       - name: 🔍 Debug allure-results
         if: always()
         run: |
-          echo "📁 Contents of allure-results:"
-          ls -la allure-results/ 2>/dev/null || echo "⚠️ allure-results not found"
-          echo "📄 Count of result files:"
-          ls allure-results/*-result.json 2>/dev/null | wc -l || echo "0"
+          echo "📁 PWD: $(pwd)"
+          echo "📁 allure-results exists? $(test -d allure-results && echo 'YES' || echo 'NO')"
+          echo "📄 Count result files:"
+          ls -la allure-results/*-result.json 2>/dev/null | wc -l || echo "0"
+          echo "📄 Sample result file:"
+          ls allure-results/*-result.json 2>/dev/null | head -1 | xargs cat 2>/dev/null | head -20 || echo "No files"
 
-      # 6️⃣ 🔥 ГЕНЕРАЦИЯ ОТЧЁТА (создаёт allure-report/)
+      # 6️⃣ ГЕНЕРАЦИЯ ОТЧЁТА
       - name: 📊 Generate Allure Report
-        if: always() # ← Запускается даже если тесты упали
-        run: |
-          # Устанавливаем allure-commandline
-          npm install -g allure-commandline
-
-          # Копируем историю для графика стабильности (если есть)
-          mkdir -p allure-results/history
-          if [ -d allure-results/history ] && ls allure-results/history/*.json 1> /dev/null 2>&1; then
-            echo "📜 History found, keeping it"
-          fi
-
-          # Генерируем отчет
-          allure generate allure-results --clean -o allure-report --history-path allure-results/history
-
-          # Проверяем, что отчет создан
-          if [ -f allure-report/index.html ]; then
-            echo "✅ Allure report generated: allure-report/index.html"
-            ls -la allure-report/
-          else
-            echo "❌ ERROR: allure-report/index.html not found!"
-            exit 1
-          fi
-
-      # 7️⃣ 🔥 КОПИРОВАНИЕ КАСТОМНОГО ЛЕНДИНГА (опционально)
-      - name: 🎨 Prepare custom landing page (optional)
         if: always()
         run: |
-          if [ -f public/index.html ]; then
-            echo "📄 Copying custom index.html..."
-            cp public/index.html allure-report/index.html
-            echo "✅ Copied"
-          else
-            echo "ℹ️ No custom landing page, using default Allure index"
-          fi
+          npm install -g allure-commandline
+          allure generate allure-results --clean -o allure-report
 
-      # 8️⃣ 🔥 ДЕПЛОЙ НА GITHUB PAGES (создаёт ветку gh-pages)
+      # 7️⃣ ДЕПЛОЙ
       - name: 🚀 Deploy to GitHub Pages
         if: always() && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-report # ← Должна существовать после шага 6!
+          publish_dir: allure-report
           publish_branch: gh-pages
-          keep_files: false
-          user_name: "github-actions[bot]"
-          user_email: "github-actions[bot]@users.noreply.github.com"
-          commit_message: "📊 Allure report: ${{ github.sha }}"
 
-      # 9️⃣ Telegram уведомления (опционально)
-      - name: 📢 Telegram notification
-        if: always()
-        uses: appleboy/telegram-action@master
-        continue-on-error: true
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          format: html
-          message: |
-            <b>🎓 Diploma in Test Automation — ${{ job.status == 'success' && '✅ PASSED' || '❌ FAILED' }}</b>
-            🔗 Report: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+      # 8️⃣ АРТЕФАКТЫ
       - name: 📤 Upload Allure results
         uses: actions/upload-artifact@v4
         if: always()
@@ -141,7 +93,7 @@ jobs:
           path: allure-results/
           retention-days: 7
 
-      # 🔟 📊 ПАРСИНГ СТАТИСТИКИ ТЕСТОВ
+      # 9️⃣ ПАРСИНГ СТАТИСТИКИ (без jq — чистый grep)
       - name: 📊 Parse test statistics
         if: always()
         id: stats
@@ -151,62 +103,29 @@ jobs:
           if [ -d "allure-results" ]; then
             for file in allure-results/*-result.json; do
               [ -f "$file" ] || continue
-              STATUS=$(cat "$file" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+              # Парсим status без jq
+              STATUS=$(grep -o '"status"[^,}]*' "$file" | grep -o '"[^"]*"$' | tr -d '"' | head -1)
+              echo "File: $file → Status: $STATUS"
               case "$STATUS" in
-                "passed") ((PASSED++)) ;;
-                "failed") ((FAILED++)) ;;
-                "skipped") ((SKIPPED++)) ;;
-                "broken") ((BROKEN++)) ;;
+                "passed") PASSED=$((PASSED + 1)) ;;
+                "failed") FAILED=$((FAILED + 1)) ;;
+                "skipped") SKIPPED=$((SKIPPED + 1)) ;;
+                "broken") BROKEN=$((BROKEN + 1)) ;;
               esac
             done
           fi
           
           TOTAL=$((PASSED + FAILED + SKIPPED + BROKEN))
           
-          echo "passed=${PASSED:-0}" >> $GITHUB_OUTPUT
-          echo "failed=${FAILED:-0}" >> $GITHUB_OUTPUT
-          echo "skipped=${SKIPPED:-0}" >> $GITHUB_OUTPUT
-          echo "broken=${BROKEN:-0}" >> $GITHUB_OUTPUT
-          echo "total=${TOTAL:-0}" >> $GITHUB_OUTPUT
+          echo "passed=$PASSED" >> $GITHUB_OUTPUT
+          echo "failed=$FAILED" >> $GITHUB_OUTPUT
+          echo "skipped=$SKIPPED" >> $GITHUB_OUTPUT
+          echo "broken=$BROKEN" >> $GITHUB_OUTPUT
+          echo "total=$TOTAL" >> $GITHUB_OUTPUT
           
-          echo "📊 Statistics: Total=$TOTAL, Passed=$PASSED, Failed=$FAILED, Skipped=$SKIPPED, Broken=$BROKEN"
+          echo "📊 FINAL: Total=$TOTAL, Passed=$PASSED, Failed=$FAILED, Skipped=$SKIPPED, Broken=$BROKEN"
 
-      - name: 🔍 Debug - Check allure-report
-        if: always()
-        run: |
-          echo "📁 Contents of current directory:"
-          ls -la
-          echo "📁 Contents of allure-report (if exists):"
-          ls -la allure-report/ 2>/dev/null || echo "❌ allure-report not found"
-          echo "📁 Contents of allure-results (if exists):"
-          ls -la allure-results/ 2>/dev/null || echo "❌ allure-results not found"
-
-      - name: 📤 Upload to Allure TestOps
-        if: always()
-        continue-on-error: true
-        env:
-          ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
-          ALLURE_PROJECT_ID: ${{ secrets.ALLURE_PROJECT_ID }}
-          ALLURE_ENDPOINT: ${{ secrets.ALLURE_ENDPOINT }}
-        run: |
-          curl -sSL https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64 -o /tmp/allurectl
-          chmod +x /tmp/allurectl
-           /tmp/allurectl upload \
-            --endpoint "$ALLURE_ENDPOINT" \
-            --token "$ALLURE_TOKEN" \
-            --project-id "$ALLURE_PROJECT_ID" \
-            --launch-name "Diploma · ${{ inputs.suite || 'all' }} · #${{ github.run_number }}" \
-            --launch-tags "branch:${{ github.ref_name }},sha:${{ github.sha }},ci:github" \
-            allure-results || echo "⚠️ TestOps upload skipped"
-      - name: 🎨 Prepare landing page
-        if: always()
-        run: |
-          if [ -f public/index.html ]; then
-            # Копируем лендинг как ОТДЕЛЬНУЮ страницу, не перезаписывая отчёт
-            cp public/index.html allure-report/landing.html
-            echo "✅ Copied landing.html"
-          fi
-            # 1️⃣1️⃣ 📢 Telegram notification
+      # 🔟 TELEGRAM
       - name: 📢 Telegram notification
         if: always()
         uses: appleboy/telegram-action@master
@@ -219,15 +138,14 @@ jobs:
             <b>🎓 Diploma in Test Automation — ${{ job.status == 'success' && '✅ Успех' || '❌ Провал' }}</b>
 
             📊 <b>Статистика тестов:</b>
-            ▫️ Всего пройдено: <b>${{ steps.stats.outputs.total != '' && steps.stats.outputs.total || '0' }}</b>
-            ✅ Успешные: <b>${{ steps.stats.outputs.passed != '' && steps.stats.outputs.passed || '0' }}</b>
-            ❌ Провалено: <b>${{ steps.stats.outputs.failed != '' && steps.stats.outputs.failed || '0' }}</b>
-            ⏭️ Пропущено: <b>${{ steps.stats.outputs.skipped != '' && steps.stats.outputs.skipped || '0' }}</b>
-            ⚠️ Сломано: <b>${{ steps.stats.outputs.broken != '' && steps.stats.outputs.broken || '0' }}</b>
+            ▫️ Всего пройдено: <b>${{ steps.stats.outputs.total }}</b>
+            ✅ Успешные: <b>${{ steps.stats.outputs.passed }}</b>
+            ❌ Провалено: <b>${{ steps.stats.outputs.failed }}</b>
+            ⏭️ Пропущено: <b>${{ steps.stats.outputs.skipped }}</b>
+            ⚠️ Сломано: <b>${{ steps.stats.outputs.broken }}</b>
 
             Suite: <code>${{ inputs.suite || 'all' }}</code>
             🌿 Branch: <code>${{ github.ref_name }}</code>
-            🔖 Commit: <code>${{ github.sha }}</code>
             👤 Author: ${{ github.actor }}
 
             📊 <a href="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/">Allure Report</a>
