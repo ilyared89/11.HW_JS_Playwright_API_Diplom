@@ -1,1 +1,1 @@
-[{"values":["https://demowebshop.tricentis.com"],"name":"BASE_URL"},{"values":["http://localhost:35283"],"name":"API_BASE_URL"},{"values":["chromium"],"name":"BROWSER"},{"values":["v20.20.2"],"name":"NODE"},{"values":["linux"],"name":"PLATFORM"},{"values":["true"],"name":"CI"},{"values":["main"],"name":"BRANCH"},{"values":["fd79ed0"],"name":"COMMIT"},{"values":["34"],"name":"BUILD"}]
+[{"values":["Playwright"],"name":"framework"},{"values":["JavaScript"],"name":"language"},{"values":["linux"],"name":"os"},{"values":["v20.20.2"],"name":"node"}]
