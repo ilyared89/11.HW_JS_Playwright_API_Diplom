@@ -4,13 +4,13 @@ import { BasePage } from './base.page.js';
 export class RegisterPage extends BasePage {
   constructor(page) {
     super(page);
-    this.genderMale = page.getByLabel('Male');
-    this.genderFemale = page.getByLabel('Female');
-    this.firstNameInput = page.getByLabel('First name:');
-    this.lastNameInput = page.getByLabel('Last name:');
-    this.emailInput = page.getByLabel('Email:');
-    this.passwordInput = page.getByLabel('Password:');
-    this.confirmPasswordInput = page.getByLabel('Confirm password:');
+    this.genderMale = page.getByRole('radio', { name: 'Male', exact: true });
+    this.genderFemale = page.getByRole('radio', { name: 'Female', exact: true });
+    this.firstNameInput = page.getByLabel('First name:', { exact: true });
+    this.lastNameInput = page.getByLabel('Last name:', { exact: true });
+    this.emailInput = page.getByLabel('Email:', { exact: true });
+    this.passwordInput = page.getByRole('textbox', { name: 'Password:', exact: true });
+    this.confirmPasswordInput = page.getByRole('textbox', { name: 'Confirm password:', exact: true });
     this.registerButton = page.getByRole('button', { name: 'Register' });
     this.resultMessage = page.locator('.result');
     this.validationErrors = page.locator('.field-validation-error');
