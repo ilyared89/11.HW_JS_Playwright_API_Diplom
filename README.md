@@ -192,7 +192,7 @@ npm run allure:serve
 
 ## 📝 Telegram notifications
 
-- ![telegram](image-2.png)
+- ![telegram](image-3.png)
 
 ---
 
