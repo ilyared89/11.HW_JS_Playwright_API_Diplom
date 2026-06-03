@@ -14,7 +14,6 @@ const jsonServer = require('json-server');
 let serverInstance;
 let usedPort;
 
-// Получаем случайный свободный порт
 function getFreePort() {
   return new Promise((resolve, reject) => {
     const srv = createServer();
@@ -26,19 +25,31 @@ function getFreePort() {
   });
 }
 
+const seedData = {
+  posts: [
+    { id: 1, title: 'Hello World', body: 'This is my first post', userId: 1 },
+    { id: 2, title: 'Second Post', body: 'Another post content', userId: 1 },
+    { id: 3, title: 'Third Post', body: 'More content here', userId: 2 }
+  ],
+  comments: [
+    { id: 1, postId: 1, name: 'John Doe', email: 'john@example.com', body: 'Great post!' },
+    { id: 2, postId: 1, name: 'Jane Smith', email: 'jane@example.com', body: 'Thanks for sharing' },
+    { id: 3, postId: 2, name: 'Bob Wilson', email: 'bob@example.com', body: 'Interesting read' }
+  ],
+  profile: { name: 'ilyared89' }
+};
+
 export default async function globalSetup() {
-  // 1. Получаем свободный порт
   usedPort = await getFreePort();
   const apiUrl = `http://localhost:${usedPort}`;
-  process.env.API_BASE_URL = apiUrl; // ← фикстуры подхватят автоматически
+  process.env.API_BASE_URL = apiUrl;
   console.log(`Using free port: ${usedPort}`);
 
-  // 2. Создаём db.json если нет
+  // ✅ Создаём db.json с seed-данными, если его нет
   if (!fs.existsSync(dbPath)) {
-    fs.writeFileSync(dbPath, JSON.stringify({ posts: [], comments: [] }, null, 2));
+    fs.writeFileSync(dbPath, JSON.stringify(seedData, null, 2));
   }
 
-  // 3. Запускаем json-server на случайном порту
   const server = jsonServer.create();
   const router = jsonServer.router(dbPath);
   const middlewares = jsonServer.defaults({ logger: false });
@@ -55,7 +66,7 @@ export default async function globalSetup() {
     serverInstance.on('error', reject);
   });
 
-  // 4. Allure environment
+  // Allure environment
   const resultsDir = path.join(root, 'allure-results');
   fs.mkdirSync(resultsDir, { recursive: true });
 
