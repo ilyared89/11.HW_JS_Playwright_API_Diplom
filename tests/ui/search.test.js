@@ -3,27 +3,25 @@ import { test, expect } from "../../src/helpers/fixtures/ui.fixture.js";
 
 test.describe("UI · Search @UI @SEARCH", () => {
   test("Search for existing product returns results @SMOKE", async ({
-    homePage,
+    app,
   }) => {
     await allure.epic("demowebshop");
     await allure.feature("Search");
     await allure.story("Product search");
     await allure.severity("critical");
 
-    await homePage.open("/");
-    await homePage.search("computer");
-    await expect(homePage.productGridLocator).toBeVisible();
-    await homePage.attachScreenshot("Search results");
+    await app.home.open("/");
+    await app.home.search("computer");
+    await expect(app.home.productGridLocator).toBeVisible();
+    await app.home.attachScreenshot("Search results");
   });
 
-  test("Search for non-existing product shows no results", async ({
-    homePage,
-  }) => {
-    await homePage.open("/");
-    await homePage.search("XYZ_NONEXISTENT_12345");
-    await expect(homePage.noResultsLocator).toContainText(
+  test("Search for non-existing product shows no results", async ({ app }) => {
+    await app.home.open("/");
+    await app.home.search("XYZ_NONEXISTENT_12345");
+    await expect(app.home.noResultsLocator).toContainText(
       "No products were found",
     );
-    await homePage.attachScreenshot("No results");
+    await app.home.attachScreenshot("No results");
   });
 });

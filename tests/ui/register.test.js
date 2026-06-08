@@ -1,37 +1,57 @@
 import { allure } from "allure-playwright";
 import { test, expect } from "../../src/helpers/fixtures/ui.fixture.js";
-import { newUser } from "../../src/helpers/builders/index.js";
+import { UserBuilder } from "../../src/helpers/builders/index.js";
 
 test.describe("UI · Registration @UI @AUTH", () => {
-  test("Successful registration with random data @SMOKE", async ({
-    registerPage,
-  }) => {
+  test("Successful registration with random data @SMOKE", async ({ app }) => {
     await allure.epic("demowebshop");
     await allure.feature("Authentication");
     await allure.story("Registration");
     await allure.severity("blocker");
 
-    const user = newUser();
+    const user = new UserBuilder()
+      .addGender()
+      .addFirstName()
+      .addLastName()
+      .addEmail()
+      .addPassword()
+      .addCountry()
+      .addCity()
+      .addAddress()
+      .addZipCode()
+      .addPhone()
+      .build();
 
-    await registerPage.open("/register");
-    await registerPage.fillForm(user);
-    await registerPage.submit();
-    await expect(registerPage.resultMessageLocator).toContainText(
+    await app.register.open("/register");
+    await app.register.fillForm(user);
+    await app.register.submit();
+    await expect(app.register.resultMessageLocator).toContainText(
       "Your registration completed",
     );
-    await registerPage.attachScreenshot("Registration success");
+    await app.register.attachScreenshot("Registration success");
   });
 
-  test("Shows error for mismatched passwords", async ({ registerPage }) => {
-    await registerPage.open("/register");
-    const user = new UserBuilder().addGender().addFirstName().addLastName().addEmail().addPassword().addCountry().addCity().addAddress().addZipCode().addPhone().build()
+  test("Shows error for mismatched passwords", async ({ app }) => {
+    await app.register.open("/register");
+    const user = new UserBuilder()
+      .addGender()
+      .addFirstName()
+      .addLastName()
+      .addEmail()
+      .addPassword()
+      .addCountry()
+      .addCity()
+      .addAddress()
+      .addZipCode()
+      .addPhone()
+      .build();
     user.confirmPassword = "different";
 
-    await registerPage.fillForm(user);
-    await registerPage.submit();
-    await expect(registerPage.validationErrorsLocator.first()).toContainText(
+    await app.register.fillForm(user);
+    await app.register.submit();
+    await expect(app.register.validationErrorsLocator.first()).toContainText(
       "The password and confirmation password do not match",
     );
-    await registerPage.attachScreenshot("Validation error");
+    await app.register.attachScreenshot("Validation error");
   });
 });
