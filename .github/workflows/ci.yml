@@ -53,10 +53,10 @@ jobs:
       # 5️⃣ ЗАПУСК ТЕСТОВ (без переопределения репортеров!)
       - name: 🧪 Run tests
         env:
-            CI: true
-            BASE_URL: ${{ secrets.BASE_URL || 'https://demowebshop.tricentis.com' }}
-            DEMO_EMAIL: ${{ secrets.DEMO_EMAIL }}
-            DEMO_PASSWORD: ${{ secrets.DEMO_PASSWORD }}
+          CI: true
+          BASE_URL: ${{ secrets.BASE_URL || 'https://demowebshop.tricentis.com' }}
+          DEMO_EMAIL: ${{ secrets.DEMO_EMAIL }}
+          DEMO_PASSWORD: ${{ secrets.DEMO_PASSWORD }}
         run: npx playwright test
 
       # 5️⃣.5️⃣ ОТЛАДКА allure-results
