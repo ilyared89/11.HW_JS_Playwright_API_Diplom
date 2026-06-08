@@ -21,7 +21,7 @@
 | Язык             | JavaScript (ES Modules)                                            |
 | Фреймворк        | Playwright                                                         |
 | UI сайт          | [demowebshop.tricentis.com](https://demowebshop.tricentis.com)     |
-| API сайт         | [my-json-server.typicode.com](https://my-json-server.typicode.com) |
+| API сайт         | json-server (local, via globalSetup) |
 | Паттерны         | Page Object, Service Layer, Builder                                |
 | Генерация данных | @faker-js/faker                                                    |
 | Отчётность       | Allure Report, Allure TestOps                                      |

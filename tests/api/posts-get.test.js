@@ -24,5 +24,7 @@ test.describe("API · Posts Get @API @POSTS", () => {
     const body = await res.json();
     expect(body.id).toBe(1);
     expect(body.title).toBeDefined();
+    expect(body.body).toBeDefined();     
+     expect(body.userId).toBeDefined();
   });
 });

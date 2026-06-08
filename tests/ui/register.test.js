@@ -24,7 +24,7 @@ test.describe("UI · Registration @UI @AUTH", () => {
 
   test("Shows error for mismatched passwords", async ({ registerPage }) => {
     await registerPage.open("/register");
-    const user = newUser();
+    const user = new UserBuilder().addGender().addFirstName().addLastName().addEmail().addPassword().addCountry().addCity().addAddress().addZipCode().addPhone().build()
     user.confirmPassword = "different";
 
     await registerPage.fillForm(user);
