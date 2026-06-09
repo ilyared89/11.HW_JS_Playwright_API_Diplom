@@ -1,0 +1,2 @@
+[api.fixture] API_BASE_URL: http://localhost:36355
+🔍 POST URL: http://localhost:36355/posts
