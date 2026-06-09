@@ -9,24 +9,24 @@
 
 Демонстрация навыков автоматизации тестирования, полученных в рамках курса:
 
-- **UI автоматизация** — 5 функциональных тестов с Page Object, генератором данных и кастомными ассертами
-- **API автоматизация** — 5 функциональных тестов с Service Layer, генератором данных и кастомными ассертами
+- **UI автоматизация** — 7 функциональных тестов с Page Object, генератором данных и кастомными ассертами
+- **API автоматизация** — 8 функциональных тестов с Service Layer, генератором данных и кастомными ассертами
 - **CI/CD** — запуск в GitHub Actions и Jenkins с уведомлениями в Telegram
 - **Reporting** — Allure Report с историей в GitHub Pages + Allure TestOps
 
 ## 🧰 Технологический стек
 
-| Категория        | Инструмент                                                         |
-| ---------------- | ------------------------------------------------------------------ |
-| Язык             | JavaScript (ES Modules)                                            |
-| Фреймворк        | Playwright                                                         |
-| UI сайт          | [demowebshop.tricentis.com](https://demowebshop.tricentis.com)     |
-| API сайт         | json-server (local, via globalSetup) |
-| Паттерны         | Page Object, Service Layer, Builder                                |
-| Генерация данных | @faker-js/faker                                                    |
-| Отчётность       | Allure Report, Allure TestOps                                      |
-| CI/CD            | GitHub Actions, Jenkins                                            |
-| Уведомления      | Telegram Bot                                                       |
+| Категория        | Инструмент                                                     |
+| ---------------- | -------------------------------------------------------------- |
+| Язык             | JavaScript (ES Modules)                                        |
+| Фреймворк        | Playwright                                                     |
+| UI сайт          | [demowebshop.tricentis.com](https://demowebshop.tricentis.com) |
+| API сайт         | json-server (local, via globalSetup)                           |
+| Паттерны         | Page Object, Service Layer, Builder                            |
+| Генерация данных | @faker-js/faker                                                |
+| Отчётность       | Allure Report, Allure TestOps                                  |
+| CI/CD            | GitHub Actions, Jenkins                                        |
+| Уведомления      | Telegram Bot                                                   |
 
 ## 🚀 Быстрый старт
 
@@ -48,6 +48,7 @@ npx playwright install chromium
 ```
 
 ### Убить все node процессы (powerShell с правами Admin)
+
 ```bash
 taskkill /F /IM node.exe
 ```
@@ -184,15 +185,15 @@ npm run allure:serve
 - Результаты загружаются через `allurectl`
 - 🔧 Allure TestOps
 - [Ссыла на отчет](https://allure.autotests.cloud/project/5227/launches)
-  ![Allure TestOps](image-5.png)
+  ![Allure TestOps](image-8.png)
 - 📊 Allure Report
-  ![Отчет](image-4.png)
+  ![Отчет](image-7.png)
 - Интеграция с GitHub для отслеживания коммитов
 - Тест-кейсы синхронизируются автоматически
 
 ## 📝 Telegram notifications
 
-- ![telegram](image-3.png)
+- ![telegram](image-6.png)
 
 ## Tech Stack
 
