@@ -7,12 +7,12 @@ import { createServer } from 'node:net';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '../..');
 const dbPath = path.join(root, 'db.json');
+const statePath = path.join(root, '.api-state.json');
 
 const require = createRequire(import.meta.url);
 const jsonServer = require('json-server');
 
 let serverInstance;
-let usedPort;
 
 function getFreePort() {
   return new Promise((resolve, reject) => {
@@ -39,17 +39,25 @@ const seedData = {
   profile: { name: 'ilyared89' }
 };
 
-export default async function globalSetup() {
-  usedPort = await getFreePort();
+// ====== GLOBAL SETUP ======
+async function globalSetup() {
+  const usedPort = await getFreePort();
   const apiUrl = `http://localhost:${usedPort}`;
-  process.env.API_BASE_URL = apiUrl;
-  console.log(`Using free port: ${usedPort}`);
 
-  // ✅ Создаём db.json с seed-данными, если его нет
+  // Сохраняем в файл для передачи в рабочие процессы
+  fs.writeFileSync(statePath, JSON.stringify({ apiUrl, pid: process.pid }), 'utf-8');
+  
+  // Также в env для совместимости
+  process.env.API_BASE_URL = apiUrl;
+
+  console.log(`[globalSetup] API_BASE_URL: ${apiUrl}`);
+
+  // Создаём db.json если нет
   if (!fs.existsSync(dbPath)) {
     fs.writeFileSync(dbPath, JSON.stringify(seedData, null, 2));
   }
 
+  // Запускаем json-server
   const server = jsonServer.create();
   const router = jsonServer.router(dbPath);
   const middlewares = jsonServer.defaults({ logger: false });
@@ -60,7 +68,7 @@ export default async function globalSetup() {
   await new Promise((resolve, reject) => {
     serverInstance = server.listen(usedPort, 'localhost', (err) => {
       if (err) return reject(err);
-      console.log(`json-server started at ${apiUrl}`);
+      console.log(`[globalSetup] json-server running at ${apiUrl}`);
       resolve();
     });
     serverInstance.on('error', reject);
@@ -94,13 +102,27 @@ export default async function globalSetup() {
   );
 }
 
-export async function globalTeardown() {
+// ====== GLOBAL TEARDOWN ======
+async function globalTeardown() {
   if (serverInstance) {
     await new Promise((resolve) => {
       serverInstance.close(() => {
-        console.log('json-server stopped');
+        console.log('[globalTeardown] json-server stopped');
         resolve();
       });
     });
+    serverInstance = null;
+  }
+  
+  // Очищаем файл состояния
+  if (fs.existsSync(statePath)) {
+    fs.unlinkSync(statePath);
   }
 }
+
+// ====== DEFAULT EXPORT ======
+// Playwright требует default export для globalSetup
+export default globalSetup;
+
+// Также экспортируем teardown отдельно (будем использовать через отдельный файл)
+export { globalTeardown };

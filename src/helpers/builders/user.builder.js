@@ -30,7 +30,7 @@ export class UserBuilder {
   addPassword() {
     const pwd = `Test1!${faker.internet.password({ length: 8 })}`;
     this.user.password = pwd;
-    this.user.confirmPassword = pwd; // ✅ Исправление бага #8
+    this.user.confirmPassword = pwd; 
     return this;
   }
 

@@ -1,15 +1,16 @@
 import { allure } from 'allure-playwright';
 
 export class CommentsService {
-  constructor(api) {
-    this.api = api;
+  constructor(request) {
+    this.request = request;
+    this.baseUrl = process.env.API_BASE_URL;
   }
-
-  async getByPost(postId) {
-    return await this.api.get(`/posts/${postId}/comments`);
-  }
-
+  
   async create(postId, data) {
-    return await this.api.post(`/posts/${postId}/comments`, data);
+    return this.request.post(`${this.baseUrl}/posts/${postId}/comments`, { data });
+  }
+  
+  async getByPost(postId) {
+    return this.request.get(`${this.baseUrl}/posts/${postId}/comments`);
   }
 }

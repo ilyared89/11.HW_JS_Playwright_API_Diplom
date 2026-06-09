@@ -1,31 +1,34 @@
 import { allure } from 'allure-playwright';
 
 export class PostsService {
-  constructor(api) {
-    this.api = api;
+  constructor(request) {
+    this.request = request;
+    this.baseUrl = process.env.API_BASE_URL;  // должен быть установлен
   }
-
-  async getAll() {
-    return await this.api.get('/posts');
-  }
-
+  
+ async create(data) {
+  const url = `${this.baseUrl}/posts`;
+  console.log('🔍 POST URL:', url);
+  return this.request.post(url, { data });
+}
+  
   async getById(id) {
-    return await this.api.get(`/posts/${id}`);
+    return this.request.get(`${this.baseUrl}/posts/${id}`);
   }
-
-  async create(data) {
-    return await this.api.post('/posts', data);
+  
+  async getAll() {
+    return this.request.get(`${this.baseUrl}/posts`);
   }
-
+  
   async update(id, data) {
-    return await this.api.put(`/posts/${id}`, data);
+    return this.request.put(`${this.baseUrl}/posts/${id}`, { data });
   }
-
+  
   async patch(id, data) {
-    return await this.api.patch(`/posts/${id}`, data);
+    return this.request.patch(`${this.baseUrl}/posts/${id}`, { data });
   }
-
+  
   async delete(id) {
-    return await this.api.delete(`/posts/${id}`);
+    return this.request.delete(`${this.baseUrl}/posts/${id}`);
   }
 }

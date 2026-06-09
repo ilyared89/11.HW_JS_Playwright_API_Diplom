@@ -8,11 +8,11 @@ export default defineConfig({
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1,
-  workers: process.env.CI ? 1 : 2,
+  workers:  1,
   timeout: 90_000,
   expect: { timeout: 10_000 },
   globalSetup: './tests/setup/global.setup.js',
-  globalTeardown: './tests/setup/global.setup.js',
+  globalTeardown: './tests/setup/global.teardown.js',
 
   reporter: [
     ['list'],

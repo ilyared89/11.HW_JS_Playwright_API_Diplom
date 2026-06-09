@@ -55,6 +55,10 @@ jobs:
         env:
           CI: true
           BASE_URL: ${{ secrets.BASE_URL || 'https://demowebshop.tricentis.com' }}
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           DEMO_EMAIL: ${{ secrets.DEMO_EMAIL }}
           DEMO_PASSWORD: ${{ secrets.DEMO_PASSWORD }}
         run: npx playwright test

@@ -1,39 +1,40 @@
-import { allure } from "allure-playwright";
-import {
-  apiTest as test,
-  expect,
-} from "../../src/helpers/fixtures/api.fixture.js";
+// tests/api/comments.test.js — замени полностью
+import { test, expect } from "../../src/helpers/fixtures/api.fixture.js";
 import { CommentBuilder } from "../../src/helpers/builders/index.js";
+import { faker } from "@faker-js/faker";
 
-test.describe("API · Comments @API @COMMENTS", () => {
-  test("Gets comments by post @SMOKE @GET", async ({ api }) => {
-    await allure.epic("json-server");
-    await allure.feature("Comments");
-    await allure.story("Get comments by post");
-    await allure.severity("critical");
+test("Creates comment for post", async ({ api }) => {
+  const comment = new CommentBuilder()
+    .withName(faker.person.fullName())
+    .withEmail(faker.internet.email())
+    .withBody(faker.lorem.paragraph())
+    .build();
 
-    const res = await api.comments.getByPost(1);
-    expect(res.status()).toBe(200);
-    const body = await res.json();
-    expect(Array.isArray(body)).toBe(true);
-    expect(body.length).toBeGreaterThan(0);
-  });
+  const postId = 1;
 
-  test("Creates comment for post @POST", async ({ api }) => {
-    await allure.epic("json-server");
-    await allure.feature("Comments");
-    await allure.story("Create comment");
-    await allure.severity("normal");
+  const res = await api.comments.create(postId, comment);
+  const body = await res.json();
 
-    const comment = new CommentBuilder().addName().addEmail().addBody().build();
-    const postId = 1;
-    const res = await api.comments.create(postId, comment);
-    expect(res.status()).toBe(201);
-    const body = await res.json();
-    expect(body.name).toBe(comment.name);
-    expect(body.email).toBe(comment.email);
-    expect(body.body).toBe(comment.body);
-    expect(body.postId).toBe(String(postId));
-    expect(body.id).toBeDefined();
+  expect(res.status()).toBe(201);
+  expect(body).toHaveProperty("name", comment.name);
+  expect(body).toHaveProperty("email", comment.email);
+  expect(body).toHaveProperty("body", comment.body);
+  expect(body).toHaveProperty("postId", postId.toString()); // ✅ строка "1"
+  expect(body).toHaveProperty("id");
+});
+
+test("Gets comments by post", async ({ api }) => {
+  const postId = 1;
+
+  const res = await api.comments.getByPost(postId);
+  const body = await res.json();
+
+  expect(res.status()).toBe(200);
+  expect(Array.isArray(body)).toBe(true);
+  expect(body.length).toBeGreaterThan(0);
+
+  //  ИСПРАВЛЕНО: сравниваем со строкой
+  body.forEach((comment) => {
+    expect(String(comment.postId)).toBe(String(postId));
   });
 });

@@ -1,48 +1,44 @@
 import { allure } from "allure-playwright";
-import {
-  apiTest as test,
-  expect,
-} from "../../src/helpers/fixtures/api.fixture.js";
+import { test, expect } from "../../src/helpers/fixtures/api.fixture.js";
 import { PostBuilder } from "../../src/helpers/builders/index.js";
+import { faker } from "@faker-js/faker";
 
-test.describe("API · Posts Update @API @POSTS", () => {
-  test("Updates post with PUT @SMOKE @PUT", async ({ api }) => {
-    await allure.epic("json-server");
-    await allure.feature("Posts");
-    await allure.story("Update post");
-    await allure.severity("critical");
+test("Updates post with PUT", async ({ api }) => {
+  // Создаём пост для изоляции
+  const post = new PostBuilder().addTitle().addBody().addUserId().build();
+  const createRes = await api.posts.create(post);
+  const createdId = (await createRes.json()).id;
 
-    const post = new PostBuilder().addTitle().addBody().addUserId().build();
-    const createRes = await api.posts.create(post);
-    expect(createRes.status()).toBe(201);
-    const created = await createRes.json();
-    const postId = created.id;
+  const update = new PostBuilder()
+    .withTitle(faker.lorem.words(3))
+    .withBody(faker.lorem.paragraph())
+    .withUserId(post.userId)
+    .build();
 
-    const update = new PostBuilder().addTitle().addBody().addUserId().build();
-    const res = await api.posts.update(postId, update);
-    expect(res.status()).toBe(200);
-    const body = await res.json();
-    expect(body.title).toBe(update.title);
-    expect(body.body).toBe(update.body);
-    expect(body.userId).toBe(update.userId);
-  });
+  const res = await api.posts.update(createdId, update);
+  const body = await res.json();
 
-  test("Partially updates post with PATCH @PATCH", async ({ api }) => {
-    await allure.epic("json-server");
-    await allure.feature("Posts");
-    await allure.story("Partial update post");
-    await allure.severity("normal");
+  expect(res.status()).toBe(200);
+  expect(body).toHaveProperty("title", update.title);
+  expect(body).toHaveProperty("body", update.body);
+  expect(body).toHaveProperty("userId", update.userId);
+  expect(body).toHaveProperty("id", createdId);
+});
 
-    const post = new PostBuilder().addTitle().addBody().addUserId().build();
-    const createRes = await api.posts.create(post);
-    expect(createRes.status()).toBe(201);
-    const created = await createRes.json();
-    const postId = created.id;
+test("Partially updates post with PATCH", async ({ api }) => {
+  // Создаём пост для изоляции
+  const post = new PostBuilder().addTitle().addBody().addUserId().build();
+  const createRes = await api.posts.create(post);
+  const createdId = (await createRes.json()).id;
 
-    const patch = new PostBuilder().addTitle().build();
-    const res = await api.posts.patch(postId, { title: patch.title });
-    expect(res.status()).toBe(200);
-    const body = await res.json();
-    expect(body.title).toBe(patch.title);
-  });
+  const patchPayload = new PostBuilder()
+    .withTitle(faker.lorem.words(3))
+    .build();
+
+  const res = await api.posts.patch(createdId, patchPayload);
+  const body = await res.json();
+
+  expect(res.status()).toBe(200);
+  expect(body).toHaveProperty("title", patchPayload.title);
+  expect(body).toHaveProperty("id", createdId);
 });

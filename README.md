@@ -194,6 +194,15 @@ npm run allure:serve
 
 - ![telegram](image-3.png)
 
+## Tech Stack
+
+- Playwright
+- JavaScript (ESM)
+- Faker.js
+- Allure
+- dotenv
+- json-server (local, via globalSetup)
+
 ---
 
 **Автор:** [ilyared89](https://github.com/ilyared89)

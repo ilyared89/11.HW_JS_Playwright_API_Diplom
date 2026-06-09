@@ -84,3 +84,5 @@ db.json
 Jenkinsfile
 notifications/telegram.json
 debug-*.png
+.api-state.json
+

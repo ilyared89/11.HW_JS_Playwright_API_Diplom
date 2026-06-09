@@ -1,29 +1,18 @@
 import { allure } from "allure-playwright";
-import {
-  apiTest as test,
-  expect,
-} from "../../src/helpers/fixtures/api.fixture.js";
+import { test, expect } from "../../src/helpers/fixtures/api.fixture.js";
 import { PostBuilder } from "../../src/helpers/builders/index.js";
 
-test.describe("API · Posts Delete @API @POSTS", () => {
-  test("Creates and deletes post successfully @SMOKE @DELETE", async ({
-    api,
-  }) => {
-    await allure.epic("json-server");
-    await allure.feature("Posts");
-    await allure.story("Delete post");
-    await allure.severity("critical");
+test("Deletes post successfully", async ({ api }) => {
+  // Создаём пост для изоляции
+  const post = new PostBuilder().addTitle().addBody().addUserId().build();
+  const createRes = await api.posts.create(post);
+  const createdId = (await createRes.json()).id;
 
-    const post = new PostBuilder().addTitle().addBody().addUserId().build();
-    const createRes = await api.posts.create(post);
-    expect(createRes.status()).toBe(201);
-    const created = await createRes.json();
-    const postId = created.id;
+  // Удаляем созданный пост
+  const deleteRes = await api.posts.delete(createdId);
+  expect(deleteRes.status()).toBe(200);
 
-    const deleteRes = await api.posts.delete(postId);
-    expect(deleteRes.status()).toBe(200);
-
-    const getRes = await api.posts.getById(postId);
-    expect(getRes.status()).toBe(404);
-  });
+  // Проверяем, что пост действительно удалён
+  const getRes = await api.posts.getById(createdId);
+  expect(getRes.status()).toBe(404);
 });

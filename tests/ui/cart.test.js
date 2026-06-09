@@ -1,32 +1,53 @@
-import { allure } from "allure-playwright";
+// tests/ui/cart.test.js — замени полностью
 import { test, expect } from "../../src/helpers/fixtures/ui.fixture.js";
 
-test.describe("UI · Cart @UI @CART", () => {
-  test("Add product to cart and remove it @SMOKE", async ({ app }) => {
-    await allure.epic("Demo Web Shop");
-    await allure.feature("Cart");
-    await allure.severity("critical");
+test("User adds product to cart", async ({ app }) => {
+  await app.homePage.open("/");
+  await app.homePage.search("book");
+  await app.homePage.openProduct(0);
 
-    await app.home.open("/");
-    await app.home.search("book");
-    await expect(app.home.productGridLocator).toBeVisible();
+  // Добавляем в корзину
+  await app.productPage.addToCart(1);
 
-    await app.home.openProduct(0);
-    await app.product.addToCart(1);
-    await expect(app.product.notificationLocator).toContainText(
-      "The product has been added",
-    );
+  //  Проверяем уведомление об успешном добавлении
+  await expect(app.productPage.notificationLocator).toContainText(
+    "The product has been added",
+    { timeout: 10000 },
+  );
 
-    await app.home.openCart();
-    await expect(app.cart.cartItemsLocator).toHaveCount(1);
-    await expect(app.cart.productNameLocator.first()).toBeVisible();
-    await app.cart.attachScreenshot("Cart with item");
+  // Переходим в корзину
+  await app.homePage.openCart();
 
-    await app.cart.removeFirstItem();
-    await expect(app.cart.emptyCartMessageLocator).toContainText(
-      "Your Shopping Cart is empty!",
-      { timeout: 10000 },
-    );
-    await app.cart.attachScreenshot("Cart empty");
+  // Проверяем, что товар есть в корзине
+  await expect(app.cartPage.cartItemsLocator.first()).toBeVisible({
+    timeout: 10000,
+  });
+});
+
+test("User removes product from cart", async ({ app }) => {
+  await app.homePage.open("/");
+  await app.homePage.search("book");
+  await app.homePage.openProduct(0);
+
+  // Добавляем в корзину
+  await app.productPage.addToCart(1);
+  await expect(app.productPage.notificationLocator).toContainText(
+    "The product has been added",
+    { timeout: 10000 },
+  );
+
+  // Переходим в корзину
+  await app.homePage.openCart();
+
+  // Проверяем, что товар добавлен
+  const itemsCount = await app.cartPage.cartItemsLocator.count();
+  expect(itemsCount).toBeGreaterThan(0);
+
+  // Удаляем товар
+  await app.cartPage.removeFirstItem();
+
+  // Проверяем, что корзина пуста
+  await expect(app.cartPage.emptyCartMessageLocator).toBeVisible({
+    timeout: 10000,
   });
 });

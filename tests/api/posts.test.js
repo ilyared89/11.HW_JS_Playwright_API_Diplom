@@ -1,24 +1,21 @@
 import { allure } from "allure-playwright";
-import {
-  apiTest as test,
-  expect,
-} from "../../src/helpers/fixtures/api.fixture.js";
+import { test, expect } from "../../src/helpers/fixtures/api.fixture.js";
 import { PostBuilder } from "../../src/helpers/builders/index.js";
+import { faker } from "@faker-js/faker";
 
-test.describe("API · Posts @API @POSTS", () => {
-  test("Creates a new post @SMOKE @POST", async ({ api }) => {
-    await allure.epic("json-server");
-    await allure.feature("Posts");
-    await allure.story("Create post");
-    await allure.severity("blocker");
+test("Creates a new post", async ({ api }) => {
+  const post = new PostBuilder()
+    .withTitle(faker.lorem.words(3))
+    .withBody(faker.lorem.paragraph())
+    .withUserId(faker.number.int({ min: 1, max: 10 }))
+    .build();
 
-    const post = new PostBuilder().addTitle().addBody().addUserId().build();
-    const res = await api.posts.create(post);
-    expect(res.status()).toBe(201);
-    const body = await res.json();
-    expect(body.title).toBe(post.title);
-    expect(body.body).toBe(post.body);
-    expect(body.userId).toBe(post.userId);
-    expect(body.id).toBeDefined();
-  });
+  const res = await api.posts.create(post);
+  const body = await res.json();
+
+  expect(res.status()).toBe(201);
+  expect(body).toHaveProperty("title", post.title);
+  expect(body).toHaveProperty("body", post.body);
+  expect(body).toHaveProperty("userId", post.userId);
+  expect(body).toHaveProperty("id");
 });

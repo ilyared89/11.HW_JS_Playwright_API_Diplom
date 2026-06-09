@@ -1,3 +1,4 @@
+// src/pages/login.page.js — замени полностью
 import { allure } from "allure-playwright";
 import { BasePage } from "./base.page.js";
 
@@ -10,6 +11,10 @@ export class LoginPage extends BasePage {
     this.errorMessage = page.locator(".validation-summary-errors");
     this.accountHeader = page.locator(".account");
     this.registerLink = page.getByRole("link", { name: "Register" });
+  }
+
+  async open() {
+    await super.open("/login");
   }
 
   async login(email, password) {
