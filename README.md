@@ -53,16 +53,21 @@ taskkill /F /IM node.exe
 ```
 
 ### Запуск тестов
+
 # Все тесты
 npm test
+
 # Только UI тесты
 npm run test:ui
+
 # Только API тесты
 npm run test:api
 
 ### Отчёты
+
 # Генерация Allure Report
 npm run allure:generate
+
 # Открытие отчёта
 npm run allure:open
 
