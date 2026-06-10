@@ -38,39 +38,33 @@ git clone https://github.com/ilyared89/11.HW_JS_Playwright_API_Diplom.git
 cd 11.HW_JS_Playwright_API_Diplom
 npm install
 
-
 # Установка зависимостей
 npm ci
-
 # Установка браузеров Playwright
 npx playwright install chromium
 ```
 
-### Убить все node процессы (powerShell с правами Admin)
-
-```bash
-taskkill /F /IM node.exe
-```
-
 ### Запуск тестов
 
+```bash
 # Все тесты
 npm test
-
 # Только UI тесты
 npm run test:ui
-
 # Только API тесты
 npm run test:api
+```
 
 ### Отчёты
 
+```bash
 # Генерация Allure Report
 npm run allure:generate
-
 # Открытие отчёта
 npm run allure:open
-
+# Serve режим
+npm run allure:serve
+```
 
 ## 📁 Структура проекта
 
