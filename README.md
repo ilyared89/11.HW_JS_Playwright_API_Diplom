@@ -55,7 +55,7 @@ taskkill /F /IM node.exe
 
 ### Запуск тестов
 
-```bash
+````bash
 # Все тесты
 npm test
 
@@ -64,13 +64,6 @@ npm run test:ui
 
 # Только API тесты
 npm run test:api
-
-# Только Smoke тесты
-npm run test:smoke
-
-# С генерацией отчёта и уведомлением
-npm run test:notify
-```
 
 ### Отчёты
 
@@ -83,40 +76,43 @@ npm run allure:open
 
 # Serve режим
 npm run allure:serve
-```
+````
 
 ## 📁 Структура проекта
 
 ```
 .
 ├── src/
-│   ├── pages/              # Page Objects (UI)
+|   ├── facades/
+|   |   ├── api.facade.js
+|   |   ├── app.facade.js
+│   ├── pages/
 │   │   ├── base.page.js
 │   │   ├── login.page.js
 │   │   ├── register.page.js
 │   │   ├── home.page.js
 │   │   ├── product.page.js
 │   │   └── cart.page.js
-│   ├── services/           # Service Layer (API)
+│   ├── services/
 │   │   ├── api.service.js
 │   │   ├── posts.service.js
 │   │   └── comments.service.js
 │   ├── helpers/
-│   │   ├── builders/       # Генераторы данных
+│   │   ├── builders/
 │   │   │   ├── user.builder.js
 │   │   │   ├── post.builder.js
 │   │   │   └── comment.builder.js
-│   │   └── fixtures/       # Playwright fixtures
+│   │   └── fixtures/
 │   │       ├── ui.fixture.js
 │   │       └── api.fixture.js
 ├── tests/
-│   ├── ui/                 # 5 UI тестов
+│   ├── ui/
 │   │   ├── login.test.js
 │   │   ├── register.test.js
 │   │   ├── search.test.js
 │   │   ├── cart.test.js
 │   │   └── newsletter.test.js
-│   └── api/                # 5 API тестов
+│   └── api/
 │       ├── posts.test.js
 │       ├── posts-get.test.js
 │       ├── posts-update.test.js
@@ -134,32 +130,6 @@ npm run allure:serve
 └── README.md
 ```
 
-## 🧪 UI Тесты (demowebshop.tricentis.com)
-
-| Тест                | Описание                           | Теги                     |
-| ------------------- | ---------------------------------- | ------------------------ |
-| Login — valid       | Успешный логин с валидными кредами | @SMOKE, @UI, @AUTH       |
-| Login — invalid     | Ошибка при невалидных кредах       | @UI, @AUTH               |
-| Register — valid    | Регистрация с данными от Faker     | @SMOKE, @UI, @AUTH       |
-| Register — mismatch | Ошибка при несовпадении паролей    | @UI, @AUTH               |
-| Search — results    | Поиск товара по названию           | @SMOKE, @UI, @SEARCH     |
-| Search — no results | Поиск несуществующего товара       | @UI, @SEARCH             |
-| Cart — add/remove   | Добавление и удаление из корзины   | @SMOKE, @UI, @CART       |
-| Newsletter          | Подписка на рассылку               | @SMOKE, @UI, @NEWSLETTER |
-
-## 🌐 API Тесты (json-server, локально через globalSetup)
-
-| Тест              | Описание                     | Теги                          |
-| ----------------- | ---------------------------- | ----------------------------- |
-| Posts — create    | Создание поста (POST)        | @SMOKE, @API, @POSTS, @POST   |
-| Posts — get all   | Получение всех постов (GET)  | @SMOKE, @API, @POSTS, @GET    |
-| Posts — get one   | Получение одного поста (GET) | @API, @POSTS, @GET            |
-| Posts — update    | Полное обновление (PUT)      | @SMOKE, @API, @POSTS, @PUT    |
-| Posts — patch     | Частичное обновление (PATCH) | @API, @POSTS, @PATCH          |
-| Posts — delete    | Удаление поста (DELETE)      | @SMOKE, @API, @POSTS, @DELETE |
-| Comments — get    | Получение комментариев поста | @SMOKE, @API, @COMMENTS, @GET |
-| Comments — create | Создание комментария         | @API, @COMMENTS, @POST        |
-
 ## 🔗 Полезные ссылки
 
 | Ресурс                       | Ссылка                                                      |
@@ -168,7 +138,7 @@ npm run allure:serve
 | Allure TestOps               | https://allure.autotests.cloud/                             |
 | Jenkins                      | https://jenkins.autotests.cloud/                            |
 | UI тестируемый сайт          | https://demowebshop.tricentis.com                           |
-| API тестируемый сайт         | json-server (локальный, поднимается через globalSetup)                         |
+| API тестируемый сайт         | json-server (локальный, поднимается через globalSetup)      |
 
 ## 🏗️ CI/CD
 
@@ -194,15 +164,6 @@ npm run allure:serve
 ## 📝 Telegram notifications
 
 - ![telegram](image-6.png)
-
-## Tech Stack
-
-- Playwright
-- JavaScript (ESM)
-- Faker.js
-- Allure
-- dotenv
-- json-server (local, via globalSetup)
 
 ---
 
