@@ -147,7 +147,7 @@ npm run allure:serve
 | Cart — add/remove   | Добавление и удаление из корзины   | @SMOKE, @UI, @CART       |
 | Newsletter          | Подписка на рассылку               | @SMOKE, @UI, @NEWSLETTER |
 
-## 🌐 API Тесты (my-json-server.typicode.com)
+## 🌐 API Тесты (json-server, локально через globalSetup)
 
 | Тест              | Описание                     | Теги                          |
 | ----------------- | ---------------------------- | ----------------------------- |
@@ -168,7 +168,7 @@ npm run allure:serve
 | Allure TestOps               | https://allure.autotests.cloud/                             |
 | Jenkins                      | https://jenkins.autotests.cloud/                            |
 | UI тестируемый сайт          | https://demowebshop.tricentis.com                           |
-| API тестируемый сайт         | https://my-json-server.typicode.com                         |
+| API тестируемый сайт         | json-server (локальный, поднимается через globalSetup)                         |
 
 ## 🏗️ CI/CD
 
